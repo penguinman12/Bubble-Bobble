@@ -3,8 +3,7 @@
 
 #include <GL/freeglut.h>
 
-Texture playerR;
-Texture playerL;
+
 
 void Player::initialize() {
 	playerL.initializeTexture("playerL.png");
@@ -98,6 +97,7 @@ Bubble Player::shootBubble() {
 	default:
 		break;
 	}
+	
 
 	return newBubble;
 }
@@ -112,16 +112,18 @@ void Player::move() {
 }
 
 void Player::draw() const {
-    glPushMatrix();
+	glPushMatrix();
 	glBegin(GL_QUADS);
 	glVertex3f(center[0] - size / 2, center[1] - size / 2, 0);
 	glVertex3f(center[0] - size / 2, center[1] + size / 2, 0);
 	glVertex3f(center[0] + size / 2, center[1] + size / 2, 0);
 	glVertex3f(center[0] + size / 2, center[1] - size / 2, 0);
 	glEnd();
-    switch (face)
-    {
-    case Player::LEFT:
+	glPopMatrix();
+	switch (face)
+	{
+	case Player::LEFT:
+		glPushMatrix();
 		glEnable(GL_TEXTURE_2D);
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 		glBindTexture(GL_TEXTURE_2D, playerL.getTextureID());
@@ -135,8 +137,10 @@ void Player::draw() const {
 		glTexCoord2f(1.0f, 0.0f);
 		glVertex2f(getCenter()[0] + PLAYER_SIZE / 2.0f, getCenter()[1] - PLAYER_SIZE / 2.0f);
 		glEnd();
-        break;
-    case Player::RIGHT:
+		glPopMatrix();
+		break;
+	case Player::RIGHT:
+		glPushMatrix();
 		glEnable(GL_TEXTURE_2D);
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 		glBindTexture(GL_TEXTURE_2D, playerR.getTextureID());
@@ -150,11 +154,12 @@ void Player::draw() const {
 		glTexCoord2f(1.0f, 0.0f);
 		glVertex2f(getCenter()[0] + PLAYER_SIZE / 2.0f, getCenter()[1] - PLAYER_SIZE / 2.0f);
 		glEnd();
-        break;
-    default:
-        break;
-    }
-    glEnd();
+		glPopMatrix();
+		break;
+	default:
+		break;
+	}
+	glEnd();
 
-    glPopMatrix();
+	//glPopMatrix();
 }
