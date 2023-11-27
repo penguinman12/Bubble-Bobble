@@ -40,7 +40,9 @@ private:
 	float size;
 	FACE face;
 	Vector3f acceleration;
-	HORIZONTAL_STATE horizontalState;
+	HORIZONTAL_STATE horizontalState=HORIZONTAL_STATE::STOP;
+	Texture playerR;
+	Texture playerL;
+
 	//VERTICAL_STATE verticalState;
 };
-
