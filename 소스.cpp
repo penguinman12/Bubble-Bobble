@@ -25,8 +25,8 @@ Platform ground(0.0f, -boundaryY + PLAYER_SIZE * 0.5f, 0.0f, boundaryX * 2, PLAY
 Platform ground2(-boundaryY + PLAYER_SIZE * 0.5f, 0.0f, 0.0f, PLAYER_SIZE, boundaryY * 2);
 Platform ground3(0.0f, boundaryY - PLAYER_SIZE * 0.5f, 0.0f, boundaryX * 2, PLAYER_SIZE);
 Platform ground4(boundaryY - PLAYER_SIZE * 0.5f, 0.0f, 0.0f, PLAYER_SIZE, boundaryY * 2);
-Player player1(-boundaryX/3, -boundaryY + PLAYER_SIZE * 5.0f, 0.0f, PLAYER_SIZE);
-Player player2(boundaryX/3, -boundaryY + PLAYER_SIZE * 5.0f, 0.0f, PLAYER_SIZE);
+Player player1(-boundaryX / 3, -boundaryY + PLAYER_SIZE * 5.0f, 0.0f, PLAYER_SIZE);
+Player player2(boundaryX / 3, -boundaryY + PLAYER_SIZE * 5.0f, 0.0f, PLAYER_SIZE);
 
 Platform pf1(-boundaryX / 2, -boundaryY / 2, 0.0f, boundaryX, PLAYER_SIZE);
 Platform pf2(boundaryX / 2, boundaryY / 4, 0.0f, boundaryX, PLAYER_SIZE);
@@ -39,18 +39,19 @@ Texture texture2;
 
 void togglePl(int value) {
 	pl = (pl + 1) % 2;
-	if (pl) 
+	if (pl)
 		player1.shootBubble();
 	else
 		player2.shootBubble();
-	
+
 	glutPostRedisplay();
 	glutTimerFunc(1000, togglePl, 1);
 }
 
 void initialize() {
 	//player.setVerticalState(Player::VERTICAL_STATE::FALL);
-	player.setAcceleration(Vector3f(0.0f, -0.5f, 0.0f));
+	player.setAcceleration(Vector3f(0.0f, 0.0f, 0.0f));
+	
 	texture1.initializeTexture("Front Image1.png");
 	texture2.initializeTexture("Front Image2.png");
 }
@@ -59,32 +60,35 @@ void idle() {
 	end_t = clock();
 
 	if ((float)(end_t - start_t) > 1000 / 30.0f) {
-		if (player1.isMoving())
-			player1.move();
+		if (player.isMoving()) {
+			player.move();
+			
+		}
+		
 
 		for (int i = 0; i < bubbles.size(); i++) {
 			bubbles[i].move();
-			//¹öºí Å©±â Á¶Àý
-			if(bubbles[i].getRadius() <= PLAYER_SIZE/2)
+			//ë²„ë¸” í¬ê¸° ì¡°ì ˆ
+			if (bubbles[i].getRadius() <= PLAYER_SIZE / 2)
 				bubbles[i].setRadius(bubbles[i].getRadius() + 0.5f);
-			//¹öºí yÃà ÀÌµ¿
-			if (bubbles[i].getCenter()[0] - bubbles[i].getRadius() >= boundaryX / 2)
+			//ë²„ë¸” yì¶• ì´ë™
+			if (bubbles[i].getCenter()[0] + bubbles[i].getRadius() >= boundaryX )
 				bubbles[i].setVelocity(Vector3f(0.0f, 3.0f, 0.0f));
-			if (bubbles[i].getCenter()[0] + bubbles[i].getRadius() <= -boundaryX / 2)
+			if (bubbles[i].getCenter()[0] - bubbles[i].getRadius() <= -boundaryX )
 				bubbles[i].setVelocity(Vector3f(0.0f, 3.0f, 0.0f));
 		}
 
 		start_t = end_t;
-		if ((float)(end_t - start_t) > 2000) {
-			
+		/*if ((float)(end_t - start_t) > 2000) {
+
 			start_t = end_t;
-		}
+		}*/
 		glutPostRedisplay();
 	}
 }
 
 void displayCharacters(void* font, string str, float x, float y, float red, float green, float blue, float fontSize) {
-	
+
 	glColor3f(red, green, blue);
 
 	glPushMatrix();
@@ -112,40 +116,48 @@ void display() {
 	glLoadIdentity();
 
 	// Draw 2D
-	player1.draw();
-	player1.setFace(Player::FACE::RIGHT);
-	player2.draw();
-	glEnable(GL_TEXTURE_2D);
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-	glBindTexture(GL_TEXTURE_2D, texture1.getTextureID());
-	glBegin(GL_QUADS);
-	glTexCoord2f(0.0f, 0.0f);
-	glVertex2f(-boundaryX / 1.0f,0.0f);
-	glTexCoord2f(0.0f, 1.0f);
-	glVertex2f(-boundaryX / 1.0f, boundaryY -20.0f );
-	glTexCoord2f(1.0f, 1.0f);
-	glVertex2f(boundaryX / 1.0f, boundaryY -20.0f);
-	glTexCoord2f(1.0f, 0.0f);
-	glVertex2f(boundaryX / 1.0f, 0.0f);
-	glEnd();
+	
+	if (stage == 1) {
+		player.draw();
+	}
 
-	glDisable(GL_TEXTURE_2D);
+	if (stage == 0) {
+		glEnable(GL_TEXTURE_2D);
+		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+		glBindTexture(GL_TEXTURE_2D, texture1.getTextureID());
 
-	glEnable(GL_TEXTURE_2D);
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-	glBindTexture(GL_TEXTURE_2D, texture2.getTextureID());
-	glBegin(GL_QUADS);
-	glTexCoord2f(0.0f, 0.0f);
-	glVertex2f(-boundaryX / 1.5f, -boundaryY/2.0f -50.0f);
-	glTexCoord2f(0.0f, 1.0f);
-	glVertex2f(-boundaryX / 1.5f, -boundaryY/2.0f);
-	glTexCoord2f(1.0f, 1.0f);
-	glVertex2f(boundaryX / 1.5f, -boundaryY/2.0f);
-	glTexCoord2f(1.0f, 0.0f);
-	glVertex2f(boundaryX / 1.5f, -boundaryY/2.0f - 50.0f);
-	glEnd();
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 0.0f);
+		glVertex2f(-boundaryX / 1.0f, 0.0f);
+		glTexCoord2f(0.0f, 1.0f);
+		glVertex2f(-boundaryX / 1.0f, boundaryY - 20.0f);
+		glTexCoord2f(1.0f, 1.0f);
+		glVertex2f(boundaryX / 1.0f, boundaryY - 20.0f);
+		glTexCoord2f(1.0f, 0.0f);
+		glVertex2f(boundaryX / 1.0f, 0.0f);
+		glEnd();
 
-	glDisable(GL_TEXTURE_2D);
+		glDisable(GL_TEXTURE_2D);
+		player1.draw();
+		player1.setFace(Player::FACE::RIGHT);
+		player2.draw();
+	
+		glEnable(GL_TEXTURE_2D);
+		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+		glBindTexture(GL_TEXTURE_2D, texture2.getTextureID());
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 0.0f);
+		glVertex2f(-boundaryX / 1.5f, -boundaryY / 2.0f - 50.0f);
+		glTexCoord2f(0.0f, 1.0f);
+		glVertex2f(-boundaryX / 1.5f, -boundaryY / 2.0f);
+		glTexCoord2f(1.0f, 1.0f);
+		glVertex2f(boundaryX / 1.5f, -boundaryY / 2.0f);
+		glTexCoord2f(1.0f, 0.0f);
+		glVertex2f(boundaryX / 1.5f, -boundaryY / 2.0f - 50.0f);
+		glEnd();
+
+		glDisable(GL_TEXTURE_2D);
+	}
 
 	// Draw 3D
 	glEnable(GL_DEPTH_TEST);
@@ -164,15 +176,15 @@ void display() {
 }
 
 void keyboardDown(unsigned char key, int x, int y) {
-	
+
 	switch (key)
 	{
 	case ' ':
-		glutLeaveMainLoop();
-		if (stage ==0)
+		//glutLeaveMainLoop();
+		if (stage == 0)
 			stage = 1;
 		else {
-			player.shootBubble();
+			bubbles.push_back(player.shootBubble());
 		}
 		break;
 	default:
@@ -189,10 +201,12 @@ void specialKeyDown(int key, int x, int y) {
 	case GLUT_KEY_RIGHT:
 		player.setFace(Player::FACE::RIGHT);
 		player.setHorizontalState(Player::HORIZONTAL_STATE::MOVE);
+		
 		break;
 	case GLUT_KEY_LEFT:
 		player.setFace(Player::FACE::LEFT);
 		player.setHorizontalState(Player::HORIZONTAL_STATE::MOVE);
+		
 		break;
 	default:
 		break;
@@ -220,7 +234,7 @@ void specialKeyUp(int key, int x, int y) {
 
 int main(int argc, char** argv) {
 	// init GLUT and create Window
-	if (stage == 0) {
+	
 		glutInit(&argc, argv);
 		glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 		glutInitWindowPosition(WINDOW_X, WINDOW_Y);
@@ -231,14 +245,14 @@ int main(int argc, char** argv) {
 		glutDisplayFunc(display);
 		glutIdleFunc(idle);
 		glutKeyboardFunc(keyboardDown);
-		/*
+		
 		glutSpecialFunc(specialKeyDown);
 		glutSpecialUpFunc(specialKeyUp);
-		*/
-		glutTimerFunc(1000, togglePl, 1);
+		
+		//glutTimerFunc(1000, togglePl, 1);
 		// enter GLUT event processing cycle
 		glutMainLoop();
 		return 0;
-	}
 	
+
 }
