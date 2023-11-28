@@ -25,30 +25,6 @@ Player::Player(float x, float y, float z, float s)
 	initialize();
 }
 
-void Player::setCenter(const Vector3f& c) {
-	center = c;
-}
-
-Vector3f Player::getCenter() const {
-	return center;
-}
-
-void Player::setVelocity(const Vector3f& v) {
-	velocity = v;
-}
-
-Vector3f Player::getVelocity() const {
-	return velocity;
-}
-
-void Player::setAcceleration(const Vector3f& a) {
-	acceleration = a;
-}
-
-Vector3f Player::getAcceleration() const {
-	return acceleration;
-}
-
 void Player::setFace(FACE f) {
 	face = f;
 
@@ -72,6 +48,8 @@ void Player::setHorizontalState(HORIZONTAL_STATE hState) {
 void Player::setVerticalState(VERTICAL_STATE vState) {
 	verticalState = vState;
 }
+
+
 
 bool Player::isJumping() const {
 	return verticalState == VERTICAL_STATE::JUMP;
@@ -110,15 +88,10 @@ bool Player::isMoving() const {
 	return horizontalState == HORIZONTAL_STATE::MOVE;
 }
 
-void Player::move() {
-	
-
-	center = center + velocity;
-	velocity = velocity + acceleration;
-}
 float Player::getSize() const {
 	return size;
 }
+
 void Player::draw() const {
 	glPushMatrix();
 	glBegin(GL_QUADS);
