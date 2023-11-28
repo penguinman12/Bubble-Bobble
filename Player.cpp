@@ -29,9 +29,6 @@ void Player::setCenter(const Vector3f& c) {
 	center = c;
 }
 
-float Player::getSize() const {
-	return size;
-}
 Vector3f Player::getCenter() const {
 	return center;
 }
@@ -72,17 +69,21 @@ void Player::setHorizontalState(HORIZONTAL_STATE hState) {
 	horizontalState = hState;
 }
 
-//void Player::setVerticalState(VERTICAL_STATE vState) {
-//	verticalState = vState;
-//}
+void Player::setVerticalState(VERTICAL_STATE vState) {
+	verticalState = vState;
+}
 
-//bool Player::isJumping() const {
-//	return verticalState == VERTICAL_STATE::JUMP;
-//}
-//
-//bool Player::isFalling() const {
-//	return verticalState == VERTICAL_STATE::FALL;
-//}
+bool Player::isJumping() const {
+	return verticalState == VERTICAL_STATE::JUMP;
+}
+
+bool Player::isFalling() const {
+	return verticalState == VERTICAL_STATE::FALL;
+}
+
+bool Player::isStop() const {
+	return verticalState == VERTICAL_STATE::STOPJ;
+}
 
 Bubble Player::shootBubble() {
 	Bubble newBubble(0, 20, 20);
@@ -110,10 +111,14 @@ bool Player::isMoving() const {
 }
 
 void Player::move() {
+	
+
 	center = center + velocity;
 	velocity = velocity + acceleration;
 }
-
+float Player::getSize() const {
+	return size;
+}
 void Player::draw() const {
 	glPushMatrix();
 	glBegin(GL_QUADS);
