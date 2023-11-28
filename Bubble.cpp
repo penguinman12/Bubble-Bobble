@@ -10,7 +10,7 @@ Bubble::Bubble() {
 	velocity = Vector3f(0.0f, 0.0f, 0.0f);
 
 	mtl.setEmission(0.1f, 0.1f, 0.1f, 1.0f);
-	mtl.setAmbient(0.3f, 0.3f, 0.3f, 1.0f);
+	mtl.setAmbient(0.529f, 0.808f, 0.980f, 1.0f);
 	mtl.setDiffuse(0.5f, 0.5f, 0.5f, 1.0f);
 	mtl.setSpecular(1.0f, 1.0f, 1.0f, 1.0f);
 	mtl.setShininess(10.0f);
