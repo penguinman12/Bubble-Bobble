@@ -10,7 +10,7 @@ class Player
 public:
 	enum FACE { LEFT, RIGHT };
 	enum HORIZONTAL_STATE { STOP, MOVE };
-	//enum VERTICAL_STATE { STOP, JUMP, FALL };
+	enum VERTICAL_STATE { STOPJ, JUMP, FALL };
 
 	void initialize();
 	Player(float x, float y, float z, float s);
@@ -19,18 +19,19 @@ public:
 	Vector3f getCenter() const;
 	void setVelocity(const Vector3f& v);
 	Vector3f getVelocity() const;
-	float getSize() const;
 	void setAcceleration(const Vector3f& a);
 	Vector3f getAcceleration() const;
+	float getSize() const;
 
 	void setFace(FACE f);
 	void setHorizontalState(HORIZONTAL_STATE hState);
-	//void setVerticalState(VERTICAL_STATE vState);
+	void setVerticalState(VERTICAL_STATE vState);
 	Bubble shootBubble();
 
 	bool isMoving() const;
-	//bool isJumping() const;
-	//bool isFalling() const;
+	bool isJumping() const;
+	bool isFalling() const;
+	bool isStop() const;
 
 	void move();
 	void draw() const;
@@ -45,5 +46,5 @@ private:
 	Texture playerR;
 	Texture playerL;
 
-	//VERTICAL_STATE verticalState;
+	VERTICAL_STATE verticalState;
 };
