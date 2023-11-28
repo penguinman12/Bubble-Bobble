@@ -50,6 +50,25 @@ void togglePl(int value) {
 	glutTimerFunc(1000, togglePl, 1);
 }
 
+bool isCollisionDetected(const Player& player, const Platform& platform) {
+	/* Implement: collision detection between player and platform */
+	if ((player.getCenter()[1] - player.getSize() / 2) <= (platform.getCenter()[1] + platform.getHeight() / 2))
+		return true;
+	else
+		return false;
+
+}
+
+void handleCollision(Player& player, const Platform& platform) {
+	/* Implement: collision handling of player */
+	if (isCollisionDetected(player, platform)) {
+		player.setCenter(Vector3f(player.getCenter()[0], platform.getCenter()[1] + platform.getHeight(), platform.getCenter()[2]));
+		player.setVelocity(Vector3f(0.0f, 0.0f, 0.0f));
+		//player.setVerticalState(Player::STOP);
+	}
+}
+
+
 void initialize() {
 	//player.setVerticalState(Player::VERTICAL_STATE::FALL);
 	player.setAcceleration(Vector3f(0.0f, 0.0f, 0.0f));
@@ -119,7 +138,12 @@ void display() {
 	// Draw 2D
 	
 	if (stage == 1) {
+		ground.draw();
+		ground2.draw();
+		ground3.draw();
+		ground4.draw();
 		player.draw();
+
 	}
 
 	if (stage == 0) {
