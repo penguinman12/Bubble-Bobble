@@ -85,10 +85,7 @@ void idle() {
 	end_t = clock();
 
 	if ((float)(end_t - start_t) > 1000 / 30.0f) {
-		if (player.isMoving()) {
-			player.move();
-			
-		}
+		
 		player.move();
 		if (player.getVelocity()[1] < 0) {
 			player.setVerticalState(Player::VERTICAL_STATE::FALL);
@@ -294,9 +291,11 @@ void specialKeyUp(int key, int x, int y) {
 	{
 	case GLUT_KEY_RIGHT:
 		player.setHorizontalState(Player::HORIZONTAL_STATE::STOP);
+		player.setVelocity(Vector3f(0.0f, player.getVelocity()[1], 0));
 		break;
 	case GLUT_KEY_LEFT:
 		player.setHorizontalState(Player::HORIZONTAL_STATE::STOP);
+		player.setVelocity(Vector3f(0.0f, player.getVelocity()[1], 0));
 		break;
 	default:
 		break;
