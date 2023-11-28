@@ -29,16 +29,15 @@ void Player::setCenter(const Vector3f& c) {
 	center = c;
 }
 
+float Player::getSize() const {
+	return size;
+}
 Vector3f Player::getCenter() const {
 	return center;
 }
 
 void Player::setVelocity(const Vector3f& v) {
 	velocity = v;
-}
-
-float Player::getSize() const{
-	return size;
 }
 
 Vector3f Player::getVelocity() const {
@@ -141,6 +140,7 @@ void Player::draw() const {
 		glTexCoord2f(1.0f, 0.0f);
 		glVertex2f(getCenter()[0] + PLAYER_SIZE / 2.0f, getCenter()[1] - PLAYER_SIZE / 2.0f);
 		glEnd();
+		glDisable(GL_TEXTURE_2D);
 		glPopMatrix();
 		break;
 	case Player::RIGHT:
@@ -158,6 +158,7 @@ void Player::draw() const {
 		glTexCoord2f(1.0f, 0.0f);
 		glVertex2f(getCenter()[0] + PLAYER_SIZE / 2.0f, getCenter()[1] - PLAYER_SIZE / 2.0f);
 		glEnd();
+		glDisable(GL_TEXTURE_2D);
 		glPopMatrix();
 		break;
 	default:
