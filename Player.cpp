@@ -55,10 +55,10 @@ void Player::setFace(FACE f) {
 	switch (face)
 	{
 	case Player::LEFT:
-		setVelocity(Vector3f(-2.0f, 0.0f, 0.0f));
+		setVelocity(Vector3f(-2.0f, velocity[1],velocity[2]));
 		break;
 	case Player::RIGHT:
-		setVelocity(Vector3f(2.0f, 0.0f, 0.0f));
+		setVelocity(Vector3f(2.0f, velocity[1], velocity[2]));
 		break;
 	default:
 		break;
