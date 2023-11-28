@@ -72,7 +72,7 @@ void handleCollision(Player& player, const Platform& platform) {
 void initialize() {
 	//player.setVerticalState(Player::VERTICAL_STATE::FALL);
 	player.setAcceleration(Vector3f(0.0f, 0.0f, 0.0f));
-	
+	player.initialize();
 	texture1.initializeTexture("Front Image1.png");
 	texture2.initializeTexture("Front Image2.png");
 	playerf1.initializeTexture("playerL.png");
