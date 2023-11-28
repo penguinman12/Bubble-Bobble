@@ -36,6 +36,8 @@ vector<Bubble> bubbles;
 vector<Player> enemy;
 Texture texture1;
 Texture texture2;
+Texture playerf1;
+Texture playerf2;
 
 void togglePl(int value) {
 	pl = (pl + 1) % 2;
@@ -54,6 +56,8 @@ void initialize() {
 	
 	texture1.initializeTexture("Front Image1.png");
 	texture2.initializeTexture("Front Image2.png");
+	playerf1.initializeTexture("playerL.png");
+	playerf2.initializeTexture("playerR.png");
 }
 
 void idle() {
@@ -79,10 +83,7 @@ void idle() {
 		}
 
 		start_t = end_t;
-		/*if ((float)(end_t - start_t) > 2000) {
-
-			start_t = end_t;
-		}*/
+		
 		glutPostRedisplay();
 	}
 }
@@ -157,6 +158,39 @@ void display() {
 		glEnd();
 
 		glDisable(GL_TEXTURE_2D);
+
+		glEnable(GL_TEXTURE_2D);
+		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+		glBindTexture(GL_TEXTURE_2D, playerf2.getTextureID());
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 0.0f);
+		glVertex2f(player1.getCenter()[0] - PLAYER_SIZE , player1.getCenter()[1] - PLAYER_SIZE );
+		glTexCoord2f(0.0f, 1.0f);
+		glVertex2f(player1.getCenter()[0] - PLAYER_SIZE , player1.getCenter()[1] + PLAYER_SIZE );
+		glTexCoord2f(1.0f, 1.0f);
+		glVertex2f(player1.getCenter()[0] + PLAYER_SIZE , player1.getCenter()[1] + PLAYER_SIZE );
+		glTexCoord2f(1.0f, 0.0f);
+		glVertex2f(player1.getCenter()[0] + PLAYER_SIZE , player1.getCenter()[1] - PLAYER_SIZE );
+		glEnd();
+
+		glDisable(GL_TEXTURE_2D);
+
+		glEnable(GL_TEXTURE_2D);
+		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+		glBindTexture(GL_TEXTURE_2D, playerf1.getTextureID());
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 0.0f);
+		glVertex2f(player2.getCenter()[0] - PLAYER_SIZE , player2.getCenter()[1] - PLAYER_SIZE );
+		glTexCoord2f(0.0f, 1.0f);
+		glVertex2f(player2.getCenter()[0] - PLAYER_SIZE , player2.getCenter()[1] + PLAYER_SIZE );
+		glTexCoord2f(1.0f, 1.0f);
+		glVertex2f(player2.getCenter()[0] + PLAYER_SIZE , player2.getCenter()[1] + PLAYER_SIZE );
+		glTexCoord2f(1.0f, 0.0f);
+		glVertex2f(player2.getCenter()[0] + PLAYER_SIZE , player2.getCenter()[1] - PLAYER_SIZE );
+		glEnd();
+
+		glDisable(GL_TEXTURE_2D);
+
 	}
 
 	// Draw 3D
