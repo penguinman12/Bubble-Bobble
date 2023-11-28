@@ -37,6 +37,10 @@ void Player::setVelocity(const Vector3f& v) {
 	velocity = v;
 }
 
+float Player::getSize() const{
+	return size;
+}
+
 Vector3f Player::getVelocity() const {
 	return velocity;
 }
