@@ -19,6 +19,7 @@ public:
 	Vector3f getCenter() const;
 	void setVelocity(const Vector3f& v);
 	Vector3f getVelocity() const;
+	float getSize() const;
 	void setAcceleration(const Vector3f& a);
 	Vector3f getAcceleration() const;
 
