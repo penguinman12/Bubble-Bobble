@@ -1,11 +1,11 @@
 #pragma once
-
+#include "Shape3D.h"
 #include "Bubble.h"
 #include "Texture.h"
 #define _USE_MATH_DEFINES
 #include <cmath>
 
-class Player
+class Player:public Shape3D
 {
 public:
 	enum FACE { LEFT, RIGHT };
@@ -15,12 +15,6 @@ public:
 	void initialize();
 	Player(float x, float y, float z, float s);
 
-	void setCenter(const Vector3f& c);
-	Vector3f getCenter() const;
-	void setVelocity(const Vector3f& v);
-	Vector3f getVelocity() const;
-	void setAcceleration(const Vector3f& a);
-	Vector3f getAcceleration() const;
 	float getSize() const;
 
 	void setFace(FACE f);
@@ -33,15 +27,12 @@ public:
 	bool isFalling() const;
 	bool isStop() const;
 
-	void move();
 	void draw() const;
 
 private:
-	Vector3f center;
-	Vector3f velocity;
+	
 	float size;
 	FACE face;
-	Vector3f acceleration;
 	HORIZONTAL_STATE horizontalState=HORIZONTAL_STATE::STOP;
 	Texture playerR;
 	Texture playerL;
