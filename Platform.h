@@ -15,8 +15,6 @@ public:
 	void draw() const;
 
 private:
-	Vector3f center;
-
 	float width, height;
 };
 
