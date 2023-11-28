@@ -52,7 +52,7 @@ void togglePl(int value) {
 
 bool isCollisionDetected(const Player& player, const Platform& platform) {
 	/* Implement: collision detection between player and platform */
-	if ((player.getCenter()[1] - player.getSize() / 2) <= (platform.getCenter()[1] + platform.getHeight() / 2))
+	if ((player.getCenter()[1] - PLAYER_SIZE / 2) <= (platform.getCenter()[1] + platform.getHeight() / 2))
 		return true;
 	else
 		return false;
@@ -61,16 +61,18 @@ bool isCollisionDetected(const Player& player, const Platform& platform) {
 
 void handleCollision(Player& player, const Platform& platform) {
 	/* Implement: collision handling of player */
-	if (isCollisionDetected(player, platform)) {
-		player.setCenter(Vector3f(player.getCenter()[0], platform.getCenter()[1] + platform.getHeight(), platform.getCenter()[2]));
+	if ((isCollisionDetected(player, platform))&&(player.isFalling())) {
+		player.setCenter(Vector3f(player.getCenter()[0], platform.getCenter()[1]+PLAYER_SIZE, 0));
 		player.setVelocity(Vector3f(0.0f, 0.0f, 0.0f));
-		//player.setVerticalState(Player::STOP);
+		player.setAcceleration(Vector3f(0.0f, 0.0f, 0.0f));
+		player.setVerticalState(Player::STOPJ);
+		cout << '1';
 	}
 }
 
 
 void initialize() {
-	//player.setVerticalState(Player::VERTICAL_STATE::FALL);
+	player.setVerticalState(Player::VERTICAL_STATE::STOPJ);
 	player.setAcceleration(Vector3f(0.0f, 0.0f, 0.0f));
 	player.initialize();
 	texture1.initializeTexture("Front Image1.png");
@@ -87,7 +89,11 @@ void idle() {
 			player.move();
 			
 		}
-		
+		player.move();
+		if (player.getVelocity()[1] < 0) {
+			player.setVerticalState(Player::VERTICAL_STATE::FALL);
+		}
+		handleCollision(player, ground);
 
 		for (int i = 0; i < bubbles.size(); i++) {
 			bubbles[i].move();
@@ -265,6 +271,15 @@ void specialKeyDown(int key, int x, int y) {
 		player.setFace(Player::FACE::LEFT);
 		player.setHorizontalState(Player::HORIZONTAL_STATE::MOVE);
 		
+		break;
+	case GLUT_KEY_UP:
+		if (player.isStop()) {
+			player.setVerticalState(Player::VERTICAL_STATE::JUMP);
+			player.setVelocity(Vector3f(0, 20, 0));
+			player.setAcceleration(Vector3f(0, -1, 0));
+			
+		}
+
 		break;
 	default:
 		break;
