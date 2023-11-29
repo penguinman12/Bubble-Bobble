@@ -25,7 +25,9 @@ Platform ground(0.0f, -boundaryY + PLAYER_SIZE * 0.5f, 0.0f, boundaryX * 2, PLAY
 Platform ground2(-boundaryY + PLAYER_SIZE * 0.5f, 0.0f, 0.0f, PLAYER_SIZE, boundaryY * 2);
 Platform ground3(0.0f, boundaryY - PLAYER_SIZE * 0.5f, 0.0f, boundaryX * 2, PLAYER_SIZE);
 Platform ground4(boundaryY - PLAYER_SIZE * 0.5f, 0.0f, 0.0f, PLAYER_SIZE, boundaryY * 2);
-Platform F1(-260, -140, 0, 40, 40);
+Platform F11(-260, -140, 0, 40, 40);
+Platform F12(0, -140, 0, 320, 40);
+Platform F13(260, -140, 0, 40, 40);
 Player player1(-boundaryX / 3, -boundaryY + PLAYER_SIZE * 5.0f, 0.0f, PLAYER_SIZE);
 Player player2(boundaryX / 3, -boundaryY + PLAYER_SIZE * 5.0f, 0.0f, PLAYER_SIZE);
 
@@ -44,7 +46,7 @@ Texture playerf2;
 
 bool isCollisionDetected(const Player& player, const Platform& platform) {
 	/* Implement: collision detection between player and platform */
-	if (((player.getCenter()[1] - PLAYER_SIZE / 2) <= (platform.getCenter()[1] + platform.getHeight() / 2)) && (abs(player.getCenter()[0] - platform.getCenter()[0]) <= player.getSize() / 2.0f + platform.getWidth() / 2.0f))
+	if (((player.getCenter()[1] - PLAYER_SIZE / 2) <= (platform.getCenter()[1] + platform.getHeight() / 2))&& ((player.getCenter()[1] - PLAYER_SIZE / 2) >= (platform.getCenter()[1] - platform.getHeight() / 2)) && (abs(player.getCenter()[0] - platform.getCenter()[0]) < player.getSize() / 2.0f + platform.getWidth() / 2.0f))
 		return true;
 	else
 		
@@ -61,12 +63,17 @@ void handleCollision(Player& player, const Platform& platform) {
 		player.setAcceleration(Vector3f(0.0f, 0.0f, 0.0f));
 		player.setVerticalState(Player::STOPJ);
 	}
-	else if (!isCollisionDetected(player, platform) && player.isStop()) {
-		player.setVerticalState(Player::FALL);
-		player.setAcceleration(Vector3f(0.0f, -0.5f, 0.0f));
+	
+}
+
+void Notonfloor(Player& player, const Platform& platform) {
+	if (((player.getCenter()[1] - PLAYER_SIZE / 2) <= (platform.getCenter()[1] + platform.getHeight() / 2)) && (abs(player.getCenter()[0] - platform.getCenter()[0]) > player.getSize() / 2.0f + platform.getWidth() / 2.0f)) {
+		if (player.isStop()) {
+			player.setVerticalState(Player::FALL);
+			player.setAcceleration(Vector3f(0.0f, -0.5f, 0.0f));
+		}
 	}
-	
-	
+
 }
 
 
@@ -90,10 +97,17 @@ void idle() {
 		if (player.getVelocity()[1] < 0) {
 			player.setVerticalState(Player::VERTICAL_STATE::FALL);
 		}
-		
+
 		
 		handleCollision(player, ground);
-		handleCollision(player, F1);
+		Notonfloor(player, ground);
+		handleCollision(player, F11);
+		Notonfloor(player, F11);
+		handleCollision(player, F12);
+		Notonfloor(player, F12);
+		handleCollision(player, F13);
+		Notonfloor(player, F13);
+		
 
 		for (int i = 0; i < bubbles.size(); i++) {
 			bubbles[i].move();
@@ -150,7 +164,9 @@ void display() {
 		ground2.draw();
 		ground3.draw();
 		ground4.draw();
-		F1.draw();
+		F11.draw();
+		F12.draw();
+		F13.draw();
 		player.draw();
 
 	}
@@ -298,6 +314,7 @@ void specialKeyUp(int key, int x, int y) {
 	case GLUT_KEY_RIGHT:
 		player.setHorizontalState(Player::HORIZONTAL_STATE::STOP);
 		player.setVelocity(Vector3f(0.0f, player.getVelocity()[1], 0));
+		cout << player.isFalling();
 		break;
 	case GLUT_KEY_LEFT:
 		player.setHorizontalState(Player::HORIZONTAL_STATE::STOP);
