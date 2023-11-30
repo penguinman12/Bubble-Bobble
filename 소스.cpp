@@ -56,6 +56,32 @@ Texture gameover;
 Texture gameover1;
 
 
+bool CollisionDetector(const Player& player, const Bubble& bubble) {
+	float distanceX = bubble.getCenter()[0] - player.getCenter()[0];
+	float distanceY = bubble.getCenter()[1] - player.getCenter()[1];
+	float distance = sqrt(distanceX * distanceX + distanceY * distanceY);
+
+	float collisionDistance = (player.getSize() / 2.0f) + bubble.getRadius();
+
+	if (distance < collisionDistance) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+void CollisionHandler(Player& player, vector<Bubble>& bubbles) {
+	for (int i = 0; i < bubbles.size(); i++) {
+		if (CollisionDetector(player, bubbles[i])) {
+			if (bubbles[i].getRadius() == 20) {
+				bubbles.erase(bubbles.begin() + i);
+			}
+		}
+	}
+}
+
+
 bool isCollisionDetected(const Player& player, const Platform& platform) {
 	/* Implement: collision detection between player and platform */
 	if (((player.getCenter()[1] - PLAYER_SIZE / 2) <= (platform.getCenter()[1] + platform.getHeight() / 2)) && ((player.getCenter()[1] - PLAYER_SIZE / 2) >= (platform.getCenter()[1] - platform.getHeight() / 2)) && (abs(player.getCenter()[0] - platform.getCenter()[0]) < player.getSize() / 2.0f + platform.getWidth() / 2.0f))
@@ -148,6 +174,7 @@ void idle() {
 		enemy2.move();
 		enemy3.move();
 
+		CollisionHandler(player, bubbles);
 		handleCollision(player, ground);
 		handleCollision(player, F11);
 		handleCollision(player, F12);
