@@ -427,6 +427,18 @@ void keyboardDown(unsigned char key, int x, int y) {
 			bubbles.push_back(player.shootBubble());
 		}
 		break;
+	case 27:
+		if (life == 0) {
+			glutLeaveMainLoop();
+		}
+		break;
+	case 'R':
+	case 'r':
+		if (life == 0) {
+			life = 3;
+			stage = 0;
+		}
+		break;
 	default:
 		break;
 	}
