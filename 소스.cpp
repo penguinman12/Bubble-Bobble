@@ -23,11 +23,17 @@ clock_t end_t;
 Player player(-boundaryX + PLAYER_SIZE * 1.5f, -boundaryY + PLAYER_SIZE * 1.5f, 0.0f, PLAYER_SIZE);
 Platform ground(0.0f, -boundaryY + PLAYER_SIZE * 0.5f, 0.0f, boundaryX * 2, PLAYER_SIZE);
 Platform ground2(-boundaryY + PLAYER_SIZE * 0.5f, 0.0f, 0.0f, PLAYER_SIZE, boundaryY * 2);
-Platform ground3(0.0f, boundaryY - PLAYER_SIZE * 0.5f, 0.0f, boundaryX * 2, PLAYER_SIZE);
-Platform ground4(boundaryY - PLAYER_SIZE * 0.5f, 0.0f, 0.0f, PLAYER_SIZE, boundaryY * 2);
-Platform F11(-260, -140, 0, 40, 40);
-Platform F12(0, -140, 0, 320, 40);
-Platform F13(260, -140, 0, 40, 40);
+Platform ground3(0.0f, boundaryY - PLAYER_SIZE * 0.25f, 0.0f, boundaryX * 2, PLAYER_SIZE/2);
+Platform ground4(boundaryY - PLAYER_SIZE * 0.5f, 0.0f, 0.0f, PLAYER_SIZE , boundaryY * 2);
+Platform F11(-260, -170, 0, 40, 40);
+Platform F12(0, -170, 0, 320, 40);
+Platform F13(260, -170, 0, 40, 40);
+Platform F21(-260, -40, 0, 40, 40);
+Platform F22(0, -40,0, 320, 40);
+Platform F23(260, -40, 0, 40, 40);
+Platform F31(-260, 90, 0, 40, 40);
+Platform F32(0, 90, 0, 320, 40);
+Platform F33(260, 90, 0, 40, 40);
 Player player1(-boundaryX / 3, -boundaryY + PLAYER_SIZE * 5.0f, 0.0f, PLAYER_SIZE);
 Player player2(boundaryX / 3, -boundaryY + PLAYER_SIZE * 5.0f, 0.0f, PLAYER_SIZE);
 
@@ -66,13 +72,16 @@ void handleCollision(Player& player, const Platform& platform) {
 	
 }
 
-void Notonfloor(Player& player, const Platform& platform) {
-	if (((player.getCenter()[1] - PLAYER_SIZE / 2) <= (platform.getCenter()[1] + platform.getHeight() / 2)) && (abs(player.getCenter()[0] - platform.getCenter()[0]) > player.getSize() / 2.0f + platform.getWidth() / 2.0f)) {
-		if (player.isStop()) {
-			player.setVerticalState(Player::FALL);
-			player.setAcceleration(Vector3f(0.0f, -0.5f, 0.0f));
-		}
+bool isonfloor(Player& player, const Platform& platform) {
+	if (((player.getCenter()[1] - PLAYER_SIZE / 2) == (platform.getCenter()[1] + platform.getHeight() / 2)) && (abs(player.getCenter()[0] - platform.getCenter()[0]) < player.getSize() / 2.0f + platform.getWidth() / 2.0f)) {
+		player.setAcceleration(Vector3f(0.0f, 0.0f, 0.0f));
+		player.setVerticalState(Player::STOPJ);
+		return true;
 	}
+	else {
+		return false;
+	}
+
 
 }
 
@@ -95,18 +104,30 @@ void idle() {
 			cout << player.getCenter()[1];
 		player.move();
 		if (player.getVelocity()[1] < 0) {
+			player.setAcceleration(Vector3f(0.0f, -0.2f, 0.0f));
 			player.setVerticalState(Player::VERTICAL_STATE::FALL);
 		}
 
 		
 		handleCollision(player, ground);
-		Notonfloor(player, ground);
 		handleCollision(player, F11);
-		Notonfloor(player, F11);
 		handleCollision(player, F12);
-		Notonfloor(player, F12);
 		handleCollision(player, F13);
-		Notonfloor(player, F13);
+		handleCollision(player, F21);
+		handleCollision(player, F22);
+		handleCollision(player, F23);
+		handleCollision(player, F31);
+		handleCollision(player, F32);
+		handleCollision(player, F33);
+
+		if (!isonfloor(player, F11) && !isonfloor(player, F12) && !isonfloor(player, F13) && !isonfloor(player, ground) &&
+			!isonfloor(player, F21) && !isonfloor(player, F22) && !isonfloor(player, F23) &&
+			!isonfloor(player, F31) && !isonfloor(player, F32) && !isonfloor(player, F33)) {
+			if (player.isStop()) {
+				player.setAcceleration(Vector3f(0, -0.5f, 0));
+				player.setVerticalState(Player::VERTICAL_STATE::FALL);
+			}
+		}
 		
 
 		for (int i = 0; i < bubbles.size(); i++) {
@@ -118,8 +139,15 @@ void idle() {
 				bubbles[i].setVelocity(Vector3f(0.0f, 3.0f, 0.0f));
 			//버블 y축 이동
 			if (bubbles[i].getCenter()[0] + bubbles[i].getRadius() >= boundaryX - PLAYER_SIZE)
+				/*if (bubbles[i].getRadius() <= PLAYER_SIZE / 2) {
+					bubbles[i].setCenter(Vector3f(boundaryX - PLAYER_SIZE * 1.5f, bubbles[i].getCenter()[1], bubbles[i].getCenter()[2]));
+					bubbles[i].setRadius(PLAYER_SIZE / 2);
+				}*/
 				bubbles[i].setVelocity(Vector3f(0.0f, 3.0f, 0.0f));
 			if (bubbles[i].getCenter()[0] - bubbles[i].getRadius() <= -boundaryX +PLAYER_SIZE)
+				/*if (bubbles[i].getRadius() != PLAYER_SIZE / 2) {
+					bubbles[i].setCenter(Vector3f(-boundaryX + PLAYER_SIZE * 1.5f, bubbles[i].getCenter()[1], bubbles[i].getCenter()[2]));
+				}*/
 				bubbles[i].setVelocity(Vector3f(0.0f, 3.0f, 0.0f));
 		}
 
@@ -167,6 +195,13 @@ void display() {
 		F11.draw();
 		F12.draw();
 		F13.draw();
+		F21.draw();
+		F22.draw();
+		F23.draw();
+		F31.draw();
+		F32.draw();
+		F33.draw();
+
 		player.draw();
 
 	}
@@ -294,7 +329,7 @@ void specialKeyDown(int key, int x, int y) {
 	case GLUT_KEY_UP:
 		if (player.isStop()) {
 			player.setVerticalState(Player::VERTICAL_STATE::JUMP);
-			player.setVelocity(Vector3f(0, 13, 0));
+			player.setVelocity(Vector3f(0, 12, 0));
 			player.setAcceleration(Vector3f(0, -0.5f, 0));
 			
 		}
