@@ -52,6 +52,7 @@ Texture texture2;
 Texture playerf1;
 Texture playerf2;
 Texture heart;
+Texture gameover;
 
 
 
@@ -121,6 +122,7 @@ void initialize() {
 	playerf1.initializeTexture("playerL.png");
 	playerf2.initializeTexture("playerR.png");
 	heart.initializeTexture("life.png");
+	gameover.initializeTexture("GAMEOVER.png");
 }
 
 void idle() {
@@ -224,7 +226,26 @@ void display() {
 	glLoadIdentity();
 
 	// Draw 2D
+	if (life == 0) {
+		stage = -1;
+		glEnable(GL_TEXTURE_2D);
+		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+		glBindTexture(GL_TEXTURE_2D, gameover.getTextureID());
 
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 0.0f);
+		glVertex2f(-boundaryX / 1.0f, 0.0f);
+		glTexCoord2f(0.0f, 1.0f);
+		glVertex2f(-boundaryX / 1.0f, boundaryY - 20.0f);
+		glTexCoord2f(1.0f, 1.0f);
+		glVertex2f(boundaryX / 1.0f, boundaryY - 20.0f);
+		glTexCoord2f(1.0f, 0.0f);
+		glVertex2f(boundaryX / 1.0f, 0.0f);
+		glEnd();
+
+		glDisable(GL_TEXTURE_2D);
+
+	}
 	if (stage == 1) {
 		ground.draw();
 		ground2.draw();
