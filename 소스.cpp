@@ -5,6 +5,7 @@
 #include "Constants.h"
 #include "Light.h"
 
+#include "Enemy.h"
 #include "Player.h"
 #include "Platform.h"
 #include "Texture.h"
@@ -36,7 +37,9 @@ Platform F32(0, 90, 0, 320, 40);
 Platform F33(260, 90, 0, 40, 40);
 Player player1(-boundaryX / 3, -boundaryY + PLAYER_SIZE * 5.0f, 0.0f, PLAYER_SIZE);
 Player player2(boundaryX / 3, -boundaryY + PLAYER_SIZE * 5.0f, 0.0f, PLAYER_SIZE);
-
+Enemy enemy1(0, -130, 0, PLAYER_SIZE );
+Enemy enemy2(0, 0, 0, PLAYER_SIZE );
+Enemy enemy3(0, 130, 0, PLAYER_SIZE );
 Platform pf1(-boundaryX / 2, -boundaryY / 2, 0.0f, boundaryX, PLAYER_SIZE);
 Platform pf2(boundaryX / 2, boundaryY / 4, 0.0f, boundaryX, PLAYER_SIZE);
 
@@ -89,6 +92,7 @@ bool isonfloor(Player& player, const Platform& platform) {
 void initialize() {
 	player.setVerticalState(Player::VERTICAL_STATE::STOPJ);
 	player.setAcceleration(Vector3f(0.0f, 0.0f, 0.0f));
+	enemy1.setFace(Enemy::FACE::LEFT);
 	player.initialize();
 	texture1.initializeTexture("Front Image1.png");
 	texture2.initializeTexture("Front Image2.png");
@@ -119,6 +123,7 @@ void idle() {
 		handleCollision(player, F31);
 		handleCollision(player, F32);
 		handleCollision(player, F33);
+		
 
 		if (!isonfloor(player, F11) && !isonfloor(player, F12) && !isonfloor(player, F13) && !isonfloor(player, ground) &&
 			!isonfloor(player, F21) && !isonfloor(player, F22) && !isonfloor(player, F23) &&
@@ -203,6 +208,10 @@ void display() {
 		F33.draw();
 
 		player.draw();
+		enemy1.draw();
+		enemy2.draw();
+		enemy3.draw();
+
 
 	}
 
