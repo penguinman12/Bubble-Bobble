@@ -100,17 +100,11 @@ void enemyMove(Enemy& enemy, Platform& platform) {
 }
 
 void minuslife(Enemy& enemy, Player& player) {
-	if (abs(player.getCenter()[0] - enemy.getCenter()[0]) < player.getSize() / 2.0f + enemy.getSize() / 2.0f &&
-		abs(player.getCenter()[1] - enemy.getCenter()[1]) < player.getSize() / 2.0f + enemy.getSize() / 2.0f) {
-		life--;
-
+	if (abs(player.getCenter()[0] - enemy.getCenter()[0]) <= 40 && abs(player.getCenter()[1] - enemy.getCenter()[1]) <= 40) {
 		player.setCenter(Vector3f(-boundaryX + PLAYER_SIZE * 1.5f, -boundaryY + PLAYER_SIZE * 1.5f, 0.0f));
-		enemy.setCenter(Vector3f(0, 0, 0)); 
-
-		
+		life -= 1;
 	}
 }
-
 
 void initialize() {
 	player.setVerticalState(Player::VERTICAL_STATE::STOPJ);
@@ -134,6 +128,7 @@ void idle() {
 
 	if ((float)(end_t - start_t) > 1000 / 30.0f) {
 		if (player.getVelocity()[1] == 0.0f && player.isJumping())
+			cout << player.getCenter()[1];
 		player.move();
 		if (player.getVelocity()[1] < 0) {
 			player.setAcceleration(Vector3f(0.0f, -0.2f, 0.0f));
@@ -157,6 +152,9 @@ void idle() {
 		enemyMove(enemy1, F12);
 		enemyMove(enemy2, F22);
 		enemyMove(enemy3, F32);
+		minuslife(enemy1, player);
+		minuslife(enemy2, player);
+		minuslife(enemy3, player);
 
 		if (!isonfloor(player, F11) && !isonfloor(player, F12) && !isonfloor(player, F13) && !isonfloor(player, ground) &&
 			!isonfloor(player, F21) && !isonfloor(player, F22) && !isonfloor(player, F23) &&
@@ -439,6 +437,7 @@ void specialKeyUp(int key, int x, int y) {
 	case GLUT_KEY_RIGHT:
 		player.setHorizontalState(Player::HORIZONTAL_STATE::STOP);
 		player.setVelocity(Vector3f(0.0f, player.getVelocity()[1], 0));
+		cout << player.isFalling();
 		break;
 	case GLUT_KEY_LEFT:
 		player.setHorizontalState(Player::HORIZONTAL_STATE::STOP);
