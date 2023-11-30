@@ -183,17 +183,18 @@ void idle() {
 			if (bubbles[i].getRadius() == PLAYER_SIZE / 2)
 				bubbles[i].setVelocity(Vector3f(0.0f, 3.0f, 0.0f));
 			//버블 y축 이동
-			if (bubbles[i].getCenter()[0] + bubbles[i].getRadius() >= boundaryX - PLAYER_SIZE)
-				/*if (bubbles[i].getRadius() <= PLAYER_SIZE / 2) {
-					bubbles[i].setCenter(Vector3f(boundaryX - PLAYER_SIZE * 1.5f, bubbles[i].getCenter()[1], bubbles[i].getCenter()[2]));
-					bubbles[i].setRadius(PLAYER_SIZE / 2);
-				}*/
+			if (bubbles[i].getCenter()[0] + bubbles[i].getRadius() >= boundaryX - PLAYER_SIZE) {
+				if (bubbles[i].getRadius() <= 20) {
+					bubbles[i].setCenter(Vector3f(260, bubbles[i].getCenter()[1], player.getCenter()[2]));
+				}
 				bubbles[i].setVelocity(Vector3f(0.0f, 3.0f, 0.0f));
-			if (bubbles[i].getCenter()[0] - bubbles[i].getRadius() <= -boundaryX + PLAYER_SIZE)
-				/*if (bubbles[i].getRadius() != PLAYER_SIZE / 2) {
-					bubbles[i].setCenter(Vector3f(-boundaryX + PLAYER_SIZE * 1.5f, bubbles[i].getCenter()[1], bubbles[i].getCenter()[2]));
-				}*/
+			}
+			if (bubbles[i].getCenter()[0] - bubbles[i].getRadius() <= -boundaryX + PLAYER_SIZE) {
+				if (bubbles[i].getRadius() <= 20) {
+					bubbles[i].setCenter(Vector3f(-260, bubbles[i].getCenter()[1], player.getCenter()[2]));
+				}
 				bubbles[i].setVelocity(Vector3f(0.0f, 3.0f, 0.0f));
+			}
 		}
 
 		start_t = end_t;
