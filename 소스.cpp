@@ -136,6 +136,14 @@ void idle() {
 			player.setVerticalState(Player::VERTICAL_STATE::FALL);
 		}
 
+		if (player.getCenter()[0] < -260) {
+			player.setCenter(Vector3f(-260, player.getCenter()[1], player.getCenter()[2]));
+		}
+
+		if (player.getCenter()[0] > 260) {
+			player.setCenter(Vector3f(260, player.getCenter()[1], player.getCenter()[2]));
+		}
+
 		enemy1.move();
 		enemy2.move();
 		enemy3.move();
