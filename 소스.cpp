@@ -88,12 +88,25 @@ bool isonfloor(Player& player, const Platform& platform) {
 
 }
 
+void enemyMove(Enemy& enemy, Platform& platform) {
+	if (enemy.getCenter()[0] + PLAYER_SIZE / 2 == platform.getCenter()[0] + platform.getWidth() / 2) {
+		enemy.setFace(Enemy::FACE::LEFT);
+	}
+	else if (enemy.getCenter()[0] - PLAYER_SIZE / 2 == platform.getCenter()[0] - platform.getWidth() / 2) {
+		enemy.setFace(Enemy::FACE::RIGHT);
+	}
+}
 
 void initialize() {
 	player.setVerticalState(Player::VERTICAL_STATE::STOPJ);
 	player.setAcceleration(Vector3f(0.0f, 0.0f, 0.0f));
-	enemy1.setFace(Enemy::FACE::LEFT);
+	enemy1.setFace(Enemy::FACE::RIGHT);
+	enemy2.setFace(Enemy::FACE::LEFT);
+	enemy3.setFace(Enemy::FACE::RIGHT);
 	player.initialize();
+	enemy1.initialize();
+	enemy2.initialize();
+	enemy3.initialize();
 	texture1.initializeTexture("Front Image1.png");
 	texture2.initializeTexture("Front Image2.png");
 	playerf1.initializeTexture("playerL.png");
@@ -112,7 +125,10 @@ void idle() {
 			player.setVerticalState(Player::VERTICAL_STATE::FALL);
 		}
 
-		
+		enemy1.move();
+		enemy2.move();
+		enemy3.move();
+
 		handleCollision(player, ground);
 		handleCollision(player, F11);
 		handleCollision(player, F12);
@@ -123,7 +139,9 @@ void idle() {
 		handleCollision(player, F31);
 		handleCollision(player, F32);
 		handleCollision(player, F33);
-		
+		enemyMove(enemy1, F12);
+		enemyMove(enemy2, F22);
+		enemyMove(enemy3, F32);
 
 		if (!isonfloor(player, F11) && !isonfloor(player, F12) && !isonfloor(player, F13) && !isonfloor(player, ground) &&
 			!isonfloor(player, F21) && !isonfloor(player, F22) && !isonfloor(player, F23) &&
