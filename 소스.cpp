@@ -53,7 +53,7 @@ Texture playerf1;
 Texture playerf2;
 Texture heart;
 Texture gameover;
-
+Texture gameover1;
 
 
 bool isCollisionDetected(const Player& player, const Platform& platform) {
@@ -123,6 +123,7 @@ void initialize() {
 	playerf2.initializeTexture("playerR.png");
 	heart.initializeTexture("life.png");
 	gameover.initializeTexture("GAMEOVER.png");
+	gameover1.initializeTexture("GAMEOVER1.png");
 }
 
 void idle() {
@@ -193,15 +194,11 @@ void idle() {
 	}
 }
 
-void displayCharacters(void* font, string str, float x, float y, float red, float green, float blue, float fontSize) {
-
-	glColor3f(red, green, blue);
+void displayCharacters(void* font, string str, float x, float y) {
 
 	glPushMatrix();
-	glScalef(fontSize, fontSize, 1.0);
 
-	glRasterPos2f(x / fontSize, y / fontSize);
-
+	glRasterPos2f(x, y);	
 	for (int i = 0; i < str.size(); i++) {
 		glutBitmapCharacter(font, str[i]);
 	}
@@ -229,7 +226,7 @@ void display() {
 		glEnable(GL_TEXTURE_2D);
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 		glBindTexture(GL_TEXTURE_2D, gameover.getTextureID());
-
+		
 		glBegin(GL_QUADS);
 		glTexCoord2f(0.0f, 0.0f);
 		glVertex2f(-boundaryX / 1.0f, 0.0f);
@@ -243,6 +240,24 @@ void display() {
 
 		glDisable(GL_TEXTURE_2D);
 
+		glEnable(GL_TEXTURE_2D);
+		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+		glBindTexture(GL_TEXTURE_2D, gameover1.getTextureID());
+
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 0.0f);
+		glVertex2f(-190, -200);
+		glTexCoord2f(0.0f, 1.0f);
+		glVertex2f(-190,-90);
+		glTexCoord2f(1.0f, 1.0f);
+		glVertex2f(190, -90);
+		glTexCoord2f(1.0f, 0.0f);
+		glVertex2f(190, -200);
+		glEnd();
+
+		glDisable(GL_TEXTURE_2D);
+
+		
 	}
 	if (stage == 1) {
 		ground.draw();
