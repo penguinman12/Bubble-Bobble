@@ -70,6 +70,20 @@ bool CollisionDetector(const Player& player, const Bubble& bubble) {
 		return false;
 	}
 }
+bool CollisionDetector(const Enemy& player, const Bubble& bubble) {
+	float distanceX = bubble.getCenter()[0] - player.getCenter()[0];
+	float distanceY = bubble.getCenter()[1] - player.getCenter()[1];
+	float distance = sqrt(distanceX * distanceX + distanceY * distanceY);
+
+	float collisionDistance = (player.getSize() / 2.0f) + bubble.getRadius();
+
+	if (distance < collisionDistance) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
 
 void CollisionHandler(Player& player, vector<Bubble>& bubbles) {
 	for (int i = 0; i < bubbles.size(); i++) {
@@ -80,6 +94,17 @@ void CollisionHandler(Player& player, vector<Bubble>& bubbles) {
 		}
 	}
 }
+void CollisionHandler(Enemy& player, vector<Bubble>& bubbles) {
+	for (int i = 0; i < bubbles.size(); i++) {
+		if (CollisionDetector(player, bubbles[i])) {
+			if (bubbles[i].getRadius() < 20) {
+				bubbles[i].setRadius(20);
+				player.setCenter(Vector3f(-1000, -1000, 0));
+			}	
+		}
+	}
+}
+
 
 
 bool isCollisionDetected(const Player& player, const Platform& platform) {
@@ -175,6 +200,9 @@ void idle() {
 		enemy3.move();
 
 		CollisionHandler(player, bubbles);
+		CollisionHandler(enemy1, bubbles);
+		CollisionHandler(enemy2, bubbles);
+		CollisionHandler(enemy3, bubbles);
 		handleCollision(player, ground);
 		handleCollision(player, F11);
 		handleCollision(player, F12);
