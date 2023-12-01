@@ -16,6 +16,7 @@ using namespace std;
 int pl = 0;
 int stage = 0;
 int life = 3;
+int enemycount = 3;
 
 
 Light light(boundaryX, boundaryY, boundaryX / 2, GL_LIGHT0);
@@ -47,6 +48,7 @@ Platform pf2(boundaryX / 2, boundaryY / 4, 0.0f, boundaryX, PLAYER_SIZE);
 
 vector<Bubble> bubbles;
 vector<Player> enemy;
+vector<Bubble> effect;
 Texture texture1;
 Texture texture2;
 Texture playerf1;
@@ -84,22 +86,38 @@ bool CollisionDetector(const Enemy& player, const Bubble& bubble) {
 		return false;
 	}
 }
+void eff(int n, vector<Bubble>& effect,Bubble &b) {
+	Bubble* p;
+	p = new Bubble;
+	for (int i = 0; i < n; i++) {
+		p->RandomMaterial();
+		p->RandomVelocity();
+		p->setCenter(b.getCenter());
+		effect.push_back(*p);
+	}
+	delete p;
+
+}
 
 void CollisionHandler(Player& player, vector<Bubble>& bubbles) {
 	for (int i = 0; i < bubbles.size(); i++) {
 		if (CollisionDetector(player, bubbles[i])) {
 			if (bubbles[i].getRadius() == 20) {
+				eff(10, effect, bubbles[i]);
 				bubbles.erase(bubbles.begin() + i);
+				
 			}
 		}
 	}
 }
+
 void CollisionHandler(Enemy& player, vector<Bubble>& bubbles) {
 	for (int i = 0; i < bubbles.size(); i++) {
 		if (CollisionDetector(player, bubbles[i])) {
 			if (bubbles[i].getRadius() < 20) {
 				bubbles[i].setRadius(20);
 				player.setCenter(Vector3f(-1000, -1000, 0));
+				enemycount--;
 			}	
 		}
 	}
@@ -251,6 +269,11 @@ void idle() {
 				bubbles[i].setVelocity(Vector3f(0.0f, 3.0f, 0.0f));
 			}
 		}
+		for (int i = 0; i < effect.size(); i++) {
+			effect[i].move();
+			
+			
+		}
 
 		start_t = end_t;
 
@@ -337,7 +360,8 @@ void display() {
 		F31.draw();
 		F32.draw();
 		F33.draw();
-
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		player.draw();
 		enemy1.draw();
 		enemy2.draw();
@@ -471,6 +495,12 @@ void display() {
 
 	for (int i = 0; i < bubbles.size(); i++)
 		bubbles[i].draw();
+
+	for (int i = 0; i < effect.size(); i++) {
+		effect[i].draw();
+
+
+	}
 
 	glDisable(light.getID());
 	glDisable(GL_LIGHTING);
