@@ -49,6 +49,7 @@ Platform pf2(boundaryX / 2, boundaryY / 4, 0.0f, boundaryX, PLAYER_SIZE);
 vector<Bubble> bubbles;
 vector<Player> enemy;
 vector<Bubble> effect;
+vector<Bubble> chain;
 Texture texture1;
 Texture texture2;
 Texture playerf1;
@@ -98,13 +99,38 @@ void eff(int n, vector<Bubble>& effect,Bubble &b) {
 	delete p;
 
 }
+bool BubbleCollision(Bubble &a, Bubble &b) {
+	float distanceX = a.getCenter()[0] - b.getCenter()[0];
+	float distanceY =a.getCenter()[1] - b.getCenter()[1];
+	float distance = sqrt(distanceX * distanceX + distanceY * distanceY);
+
+	float collisionDistance = a.getRadius() + b.getRadius();
+
+	if (distance < collisionDistance) {
+		return true;
+	}
+	else {
+		return false;
+	}
+	
+}
 
 void CollisionHandler(Player& player, vector<Bubble>& bubbles) {
 	for (int i = 0; i < bubbles.size(); i++) {
 		if (CollisionDetector(player, bubbles[i])) {
 			if (bubbles[i].getRadius() == 20) {
-				eff(10, effect, bubbles[i]);
+				eff(10, effect, bubbles[i]); 
+				chain.push_back(bubbles[i]);
 				bubbles.erase(bubbles.begin() + i);
+				for (int k = 0; k < chain.size(); k++) {
+					for (int j = 0; j < bubbles.size(); j++) {
+						if (BubbleCollision(chain[k], bubbles[j])) {
+							eff(10, effect, bubbles[j]);
+							chain.push_back(bubbles[j]);
+							bubbles.erase(bubbles.begin() + j);
+						}
+					}
+				}
 				
 			}
 		}
