@@ -1,5 +1,7 @@
 #include "Bubble.h"
-
+#include <cstdlib>
+#include <ctime>
+#include <iostream>
 #include <GL/freeglut.h>
 
 Bubble::Bubble() {
@@ -89,3 +91,21 @@ void Bubble::draw() const {
 	glutSolidSphere(radius, slice, stack);
 	glPopMatrix();     
 }
+
+void Bubble::RandomMaterial(){
+	radius = 1.0f;
+	slice = stack = 10;
+	mtl.setAmbient((rand() % 10) / 10.0 + 0.1, (rand() % 10) / 10.0 + 0.1, (rand() % 10) / 10.0 + 0.1, (rand() % 10) / 10.0);
+	mtl.setDiffuse((rand() % 10) / 10.0 + 0.1, (rand() % 10) / 10.0, (rand() % 10) / 10.0 + 0.1, (rand() % 10) / 10.0);
+	mtl.setEmission((rand() % 10) / 10.0 + 0.1, (rand() % 10) / 10.0 + 0.1, (rand() % 10) / 10.0, (rand() % 10) / 10.0);
+	mtl.setSpecular((rand() % 10) / 10.0 + 0.1, (rand() % 10) / 10.0 + 0.1, (rand() % 10) / 10.0, (rand() % 10) / 10.0);
+	mtl.setShininess((rand() % 10) / 10.0 + 0.1);
+}
+
+void Bubble::RandomVelocity() {
+	velocity[0] = (rand() % 10);
+	velocity[1] = (rand() % 10);
+	velocity[2] = (rand() % 10);
+
+}
+
