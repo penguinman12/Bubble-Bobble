@@ -1,7 +1,8 @@
 #pragma once
-
+#include <vector>
+#include <iostream>
 #include "Material.h"
-
+using namespace std;
 class Bubble {
 public:
 	Bubble();
@@ -21,6 +22,9 @@ public:
 
 	void move();
 	void draw() const;
+	void RandomMaterial();
+	void RandomVelocity();
+	
 
 private:
 	float radius;
