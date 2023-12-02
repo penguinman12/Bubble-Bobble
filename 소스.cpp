@@ -37,6 +37,11 @@ Platform F23(260, -40, 0, 40, 40);
 Platform F31(-260, 90, 0, 40, 40);
 Platform F32(0, 90, 0, 320, 40);
 Platform F33(260, 90, 0, 40, 40);
+Platform F211(-120, -170, 0, 160, 40);
+Platform F212(120, -170, 0, 160, 40);
+Platform F221(0, -40, 0, 160, 40);
+Platform F231(-120, 90, 0, 160, 40);
+Platform F232(120, 90, 0, 160, 40);
 Player player1(-boundaryX / 3, -boundaryY + PLAYER_SIZE * 5.0f, 0.0f, PLAYER_SIZE);
 Player player2(boundaryX / 3, -boundaryY + PLAYER_SIZE * 5.0f, 0.0f, PLAYER_SIZE);
 Enemy enemy1(0, -130, 0, PLAYER_SIZE);
@@ -57,6 +62,7 @@ Texture playerf2;
 Texture heart;
 Texture gameover;
 Texture gameover1;
+Texture ALLCLEAR;
 
 
 bool CollisionDetector(const Player& player, const Bubble& bubble) {
@@ -73,12 +79,12 @@ bool CollisionDetector(const Player& player, const Bubble& bubble) {
 		return false;
 	}
 }
-bool CollisionDetector(const Enemy& player, const Bubble& bubble) {
-	float distanceX = bubble.getCenter()[0] - player.getCenter()[0];
-	float distanceY = bubble.getCenter()[1] - player.getCenter()[1];
+bool CollisionDetector(const Enemy& enemy, const Bubble& bubble) {
+	float distanceX = bubble.getCenter()[0] - enemy.getCenter()[0];
+	float distanceY = bubble.getCenter()[1] - enemy.getCenter()[1];
 	float distance = sqrt(distanceX * distanceX + distanceY * distanceY);
 
-	float collisionDistance = (player.getSize() / 2.0f) + bubble.getRadius();
+	float collisionDistance = (enemy.getSize() / 2.0f) + bubble.getRadius();
 
 	if (distance < collisionDistance) {
 		return true;
@@ -137,12 +143,13 @@ void CollisionHandler(Player& player, vector<Bubble>& bubbles) {
 	}
 }
 
-void CollisionHandler(Enemy& player, vector<Bubble>& bubbles) {
+void CollisionHandler(Enemy& enemy, vector<Bubble>& bubbles) {
 	for (int i = 0; i < bubbles.size(); i++) {
-		if (CollisionDetector(player, bubbles[i])) {
+		if (CollisionDetector(enemy, bubbles[i])) {
 			if (bubbles[i].getRadius() < 20) {
 				bubbles[i].setRadius(20);
-				player.setCenter(Vector3f(-1000, -1000, 0));
+				bubbles[i].setcollision(1);
+				enemy.setCenter(Vector3f(-1000, -1000, 0));
 				enemycount--;
 			}	
 		}
@@ -219,6 +226,7 @@ void initialize() {
 	heart.initializeTexture("life.png");
 	gameover.initializeTexture("GAMEOVER.png");
 	gameover1.initializeTexture("GAMEOVER1.png");
+	ALLCLEAR.initializeTexture("ALLCLEAR.png");
 }
 
 void idle() {
@@ -263,16 +271,25 @@ void idle() {
 		minuslife(enemy1, player);
 		minuslife(enemy2, player);
 		minuslife(enemy3, player);
-
-		if (!isonfloor(player, F11) && !isonfloor(player, F12) && !isonfloor(player, F13) && !isonfloor(player, ground) &&
-			!isonfloor(player, F21) && !isonfloor(player, F22) && !isonfloor(player, F23) &&
-			!isonfloor(player, F31) && !isonfloor(player, F32) && !isonfloor(player, F33)) {
-			if (player.isStop()) {
-				player.setAcceleration(Vector3f(0, -0.5f, 0));
-				player.setVerticalState(Player::VERTICAL_STATE::FALL);
+		if (stage == 1) {
+			if (!isonfloor(player, F11) && !isonfloor(player, F12) && !isonfloor(player, F13) && !isonfloor(player, ground) &&
+				!isonfloor(player, F21) && !isonfloor(player, F22) && !isonfloor(player, F23) &&
+				!isonfloor(player, F31) && !isonfloor(player, F32) && !isonfloor(player, F33)) {
+				if (player.isStop()) {
+					player.setAcceleration(Vector3f(0, -0.5f, 0));
+					player.setVerticalState(Player::VERTICAL_STATE::FALL);
+				}
 			}
 		}
-
+		if (stage == 2) {
+			if (!isonfloor(player, F211) && !isonfloor(player, F212) && !isonfloor(player, F221) && !isonfloor(player, ground) &&
+				!isonfloor(player, F231) && !isonfloor(player, F232) ) {
+				if (player.isStop()) {
+					player.setAcceleration(Vector3f(0, -0.5f, 0));
+					player.setVerticalState(Player::VERTICAL_STATE::FALL);
+				}
+			}
+		}
 
 		for (int i = 0; i < bubbles.size(); i++) {
 			bubbles[i].move();
@@ -293,6 +310,9 @@ void idle() {
 					bubbles[i].setCenter(Vector3f(-260, bubbles[i].getCenter()[1], player.getCenter()[2]));
 				}
 				bubbles[i].setVelocity(Vector3f(0.0f, 3.0f, 0.0f));
+			}
+			if (bubbles[i].getcollision() && bubbles[i].getCenter()[1] > 280) {
+				bubbles[i].setCenter(Vector3f(bubbles[i].getCenter()[0], 280, bubbles[i].getCenter()[2]));
 			}
 		}
 		for (int i = 0; i < effect.size(); i++) {
@@ -334,12 +354,55 @@ void display() {
 	glLoadIdentity();
 
 	// Draw 2D
+	if (enemycount == 0) {
+		if (stage == 1) {
+			stage = 2;
+			enemycount = 3;
+		}
+		if (stage == 3) {
+			glEnable(GL_TEXTURE_2D);
+			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+			glBindTexture(GL_TEXTURE_2D, ALLCLEAR.getTextureID());
+
+			glBegin(GL_QUADS);
+			glTexCoord2f(0.0f, 0.0f);
+			glVertex2f(-boundaryX / 1.0f, 0.0f);
+			glTexCoord2f(0.0f, 1.0f);
+			glVertex2f(-boundaryX / 1.0f, boundaryY - 20.0f);
+			glTexCoord2f(1.0f, 1.0f);
+			glVertex2f(boundaryX / 1.0f, boundaryY - 20.0f);
+			glTexCoord2f(1.0f, 0.0f);
+			glVertex2f(boundaryX / 1.0f, 0.0f);
+			glEnd();
+
+			glDisable(GL_TEXTURE_2D);
+
+			glEnable(GL_TEXTURE_2D);
+			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+			glBindTexture(GL_TEXTURE_2D, gameover1.getTextureID());
+
+			glBegin(GL_QUADS);
+			glTexCoord2f(0.0f, 0.0f);
+			glVertex2f(-190, -200);
+			glTexCoord2f(0.0f, 1.0f);
+			glVertex2f(-190, -90);
+			glTexCoord2f(1.0f, 1.0f);
+			glVertex2f(190, -90);
+			glTexCoord2f(1.0f, 0.0f);
+			glVertex2f(190, -200);
+			glEnd();
+
+			glDisable(GL_TEXTURE_2D);
+
+		}
+	}
+
 	if (life == 0) {
 		stage = -1;
 		glEnable(GL_TEXTURE_2D);
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 		glBindTexture(GL_TEXTURE_2D, gameover.getTextureID());
-		
+
 		glBegin(GL_QUADS);
 		glTexCoord2f(0.0f, 0.0f);
 		glVertex2f(-boundaryX / 1.0f, 0.0f);
@@ -361,7 +424,7 @@ void display() {
 		glTexCoord2f(0.0f, 0.0f);
 		glVertex2f(-190, -200);
 		glTexCoord2f(0.0f, 1.0f);
-		glVertex2f(-190,-90);
+		glVertex2f(-190, -90);
 		glTexCoord2f(1.0f, 1.0f);
 		glVertex2f(190, -90);
 		glTexCoord2f(1.0f, 0.0f);
@@ -370,7 +433,7 @@ void display() {
 
 		glDisable(GL_TEXTURE_2D);
 
-		
+
 	}
 	if (stage == 1) {
 		ground.draw();
@@ -386,12 +449,12 @@ void display() {
 		F31.draw();
 		F32.draw();
 		F33.draw();
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		player.draw();
 		enemy1.draw();
 		enemy2.draw();
 		enemy3.draw();
+		player.draw();
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		if (life >= 1) {
 			glEnable(GL_TEXTURE_2D);
 			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
@@ -441,6 +504,73 @@ void display() {
 			glDisable(GL_TEXTURE_2D);
 		}
 	}
+	if (stage == 2) {
+		ground.draw();
+		ground2.draw();
+		ground3.draw();
+		ground4.draw();
+		F211.draw();
+		F212.draw();
+		F221.draw();
+		F231.draw();
+		F232.draw();
+		enemy1.draw();
+		enemy2.draw();
+		enemy3.draw();
+		player.draw();
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		if (life >= 1) {
+			glEnable(GL_TEXTURE_2D);
+			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+			glBindTexture(GL_TEXTURE_2D, heart.getTextureID());
+			glBegin(GL_QUADS);
+			glTexCoord2f(0.0f, 0.0f);
+			glVertex2f(-300, -boundaryY);
+			glTexCoord2f(0.0f, 1.0f);
+			glVertex2f(-300, -boundaryY + 40.0f);
+			glTexCoord2f(1.0f, 1.0f);
+			glVertex2f(-260, -boundaryY + 40.0f);
+			glTexCoord2f(1.0f, 0.0f);
+			glVertex2f(-260, -boundaryY);
+			glEnd();
+			glDisable(GL_TEXTURE_2D);
+		}
+		if (life >= 2) {
+			glEnable(GL_TEXTURE_2D);
+			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+			glBindTexture(GL_TEXTURE_2D, heart.getTextureID());
+			glBegin(GL_QUADS);
+			glTexCoord2f(0.0f, 0.0f);
+			glVertex2f(-255, -boundaryY);
+			glTexCoord2f(0.0f, 1.0f);
+			glVertex2f(-255, -boundaryY + 40.0f);
+			glTexCoord2f(1.0f, 1.0f);
+			glVertex2f(-215, -boundaryY + 40.0f);
+			glTexCoord2f(1.0f, 0.0f);
+			glVertex2f(-215, -boundaryY);
+			glEnd();
+			glDisable(GL_TEXTURE_2D);
+		}
+		if (life >= 3) {
+			glEnable(GL_TEXTURE_2D);
+			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+			glBindTexture(GL_TEXTURE_2D, heart.getTextureID());
+			glBegin(GL_QUADS);
+			glTexCoord2f(0.0f, 0.0f);
+			glVertex2f(-210, -boundaryY);
+			glTexCoord2f(0.0f, 1.0f);
+			glVertex2f(-210, -boundaryY + 40.0f);
+			glTexCoord2f(1.0f, 1.0f);
+			glVertex2f(-170, -boundaryY + 40.0f);
+			glTexCoord2f(1.0f, 0.0f);
+			glVertex2f(-170, -boundaryY);
+			glEnd();
+			glDisable(GL_TEXTURE_2D);
+		}
+
+	}
+
 
 	if (stage == 0) {
 		glEnable(GL_TEXTURE_2D);
@@ -548,13 +678,18 @@ void keyboardDown(unsigned char key, int x, int y) {
 		}
 		break;
 	case 27:
-		if (life == 0) {
+		if (life == 0 || (stage == 2 && enemycount == 0)) {
 			glutLeaveMainLoop();
 		}
 		break;
 	case 'R':
 	case 'r':
 		if (life == 0) {
+			life = 3;
+			stage = 0;
+		}
+		if (enemycount == 0) {
+			enemycount = 3;
 			life = 3;
 			stage = 0;
 		}
