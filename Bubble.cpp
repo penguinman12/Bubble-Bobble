@@ -65,6 +65,13 @@ Vector3f Bubble::getVelocity() const {
 	return velocity;
 }
 
+void Bubble::setcollision(int c){
+	collision = c;
+}
+bool Bubble::getcollision() {
+	return collision;
+}
+
 void Bubble::setMTL(const Material& m) {
 	mtl.setEmission(m.getEmission()[0], m.getEmission()[1], m.getEmission()[2], m.getEmission()[3]);
 	mtl.setAmbient(m.getAmbient()[0], m.getAmbient()[1], m.getAmbient()[2], m.getAmbient()[3]);
