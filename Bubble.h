@@ -17,7 +17,8 @@ public:
 	Vector3f getCenter() const;
 	void setVelocity(const Vector3f& v);
 	Vector3f getVelocity() const;
-	
+	void setcollision(int c);
+	bool getcollision();
 	void setMTL(const Material& m);
 
 	void move();
@@ -30,7 +31,7 @@ private:
 	float radius;
 	int slice;
 	int stack;
-
+	int collision = 0;
 	Vector3f center;
 	Vector3f velocity;
 	Material mtl;
