@@ -18,6 +18,7 @@ int stage = 0;
 int life = 3;
 int enemycount = 3;
 int COUNT = 0;
+int bubblecount = 0;
 
 Light light(boundaryX, boundaryY, boundaryX / 2, GL_LIGHT0);
 
@@ -156,6 +157,7 @@ void CollisionHandler(Enemy& enemy, vector<Bubble>& bubbles) {
 			if (bubbles[i].getRadius() < 20) {
 				bubbles[i].setRadius(20);
 				bubbles[i].setcollision(1);
+				bubblecount += 1;
 				enemy.setCenter(Vector3f(-1000, -1000, 0));
 				enemycount--;
 			}	
@@ -833,7 +835,7 @@ int main(int argc, char** argv) {
 
 	glutSpecialFunc(specialKeyDown);
 	glutSpecialUpFunc(specialKeyUp);
-
+	
 	//glutTimerFunc(1000, togglePl, 1);
 	// enter GLUT event processing cycle
 	glutMainLoop();
