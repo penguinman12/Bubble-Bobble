@@ -17,7 +17,7 @@ int pl = 0;
 int stage = 0;
 int life = 3;
 int enemycount = 3;
-
+int COUNT = 0;
 
 Light light(boundaryX, boundaryY, boundaryX / 2, GL_LIGHT0);
 
@@ -39,7 +39,9 @@ Platform F32(0, 90, 0, 320, 40);
 Platform F33(260, 90, 0, 40, 40);
 Platform F211(-120, -170, 0, 160, 40);
 Platform F212(120, -170, 0, 160, 40);
-Platform F221(0, -40, 0, 160, 40);
+Platform F221(-215, -40, 0, 130, 40);
+Platform F222(0, -40, 0, 160, 40);
+Platform F223(215, -40, 0, 130, 40);
 Platform F231(-120, 90, 0, 160, 40);
 Platform F232(120, 90, 0, 160, 40);
 Player player1(-boundaryX / 3, -boundaryY + PLAYER_SIZE * 5.0f, 0.0f, PLAYER_SIZE);
@@ -247,31 +249,32 @@ void idle() {
 			player.setCenter(Vector3f(260, player.getCenter()[1], player.getCenter()[2]));
 		}
 
-		enemy1.move();
-		enemy2.move();
-		enemy3.move();
-
-		CollisionHandler(player, bubbles);
-		CollisionHandler(enemy1, bubbles);
-		CollisionHandler(enemy2, bubbles);
-		CollisionHandler(enemy3, bubbles);
-		handleCollision(player, ground);
-		handleCollision(player, F11);
-		handleCollision(player, F12);
-		handleCollision(player, F13);
-		handleCollision(player, F21);
-		handleCollision(player, F22);
-		handleCollision(player, F23);
-		handleCollision(player, F31);
-		handleCollision(player, F32);
-		handleCollision(player, F33);
-		enemyMove(enemy1, F12);
-		enemyMove(enemy2, F22);
-		enemyMove(enemy3, F32);
-		minuslife(enemy1, player);
-		minuslife(enemy2, player);
-		minuslife(enemy3, player);
+		
 		if (stage == 1) {
+			enemy1.move();
+			enemy2.move();
+			enemy3.move();
+
+			CollisionHandler(player, bubbles);
+			CollisionHandler(enemy1, bubbles);
+			CollisionHandler(enemy2, bubbles);
+			CollisionHandler(enemy3, bubbles);
+			handleCollision(player, ground);
+			handleCollision(player, F11);
+			handleCollision(player, F12);
+			handleCollision(player, F13);
+			handleCollision(player, F21);
+			handleCollision(player, F22);
+			handleCollision(player, F23);
+			handleCollision(player, F31);
+			handleCollision(player, F32);
+			handleCollision(player, F33);
+			enemyMove(enemy1, F12);
+			enemyMove(enemy2, F22);
+			enemyMove(enemy3, F32);
+			minuslife(enemy1, player);
+			minuslife(enemy2, player);
+			minuslife(enemy3, player);
 			if (!isonfloor(player, F11) && !isonfloor(player, F12) && !isonfloor(player, F13) && !isonfloor(player, ground) &&
 				!isonfloor(player, F21) && !isonfloor(player, F22) && !isonfloor(player, F23) &&
 				!isonfloor(player, F31) && !isonfloor(player, F32) && !isonfloor(player, F33)) {
@@ -282,8 +285,18 @@ void idle() {
 			}
 		}
 		if (stage == 2) {
+
+			CollisionHandler(player, bubbles);
+			handleCollision(player, ground);
+			handleCollision(player, F212);
+			handleCollision(player, F211);
+			handleCollision(player, F221);
+			handleCollision(player, F222);
+			handleCollision(player, F223);
+			handleCollision(player, F231);
+			handleCollision(player, F232);
 			if (!isonfloor(player, F211) && !isonfloor(player, F212) && !isonfloor(player, F221) && !isonfloor(player, ground) &&
-				!isonfloor(player, F231) && !isonfloor(player, F232) ) {
+				!isonfloor(player, F222) && !isonfloor(player, F223) && !isonfloor(player, F231) && !isonfloor(player, F232) ) {
 				if (player.isStop()) {
 					player.setAcceleration(Vector3f(0, -0.5f, 0));
 					player.setVerticalState(Player::VERTICAL_STATE::FALL);
@@ -512,6 +525,8 @@ void display() {
 		F211.draw();
 		F212.draw();
 		F221.draw();
+		F222.draw();
+		F223.draw();
 		F231.draw();
 		F232.draw();
 		enemy1.draw();
