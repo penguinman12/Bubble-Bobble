@@ -417,12 +417,13 @@ void display() {
 	if (enemycount == 0) {
 		if (stage == 1 && bubblecount==0) {
 			stage = 2;
+			bubbles.clear();
 			
 			enemycount = 5;
 			player.setCenter(Vector3f(-boundaryX + PLAYER_SIZE * 1.5f, -boundaryY + PLAYER_SIZE * 1.5f, 0.0f));
 		}
 		else if (stage == 2 && bubblecount == 0) {
-			
+			bubbles.clear();
 			stage = 3;
 		}
 		if (stage == 3) {
@@ -571,6 +572,7 @@ void display() {
 		}
 	}
 	if (stage == 2) {
+		
 		ground.draw();
 		ground2.draw();
 		ground3.draw();
