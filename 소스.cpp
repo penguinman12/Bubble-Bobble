@@ -49,11 +49,11 @@ Player player2(boundaryX / 3, -boundaryY + PLAYER_SIZE * 5.0f, 0.0f, PLAYER_SIZE
 Enemy enemy1(0, -130, 0, PLAYER_SIZE);
 Enemy enemy2(0, 0, 0, PLAYER_SIZE);
 Enemy enemy3(0, 130, 0, PLAYER_SIZE);
-Enemy enemy21(0, -130, 0, PLAYER_SIZE);
-Enemy enemy22(0, 0, 0, PLAYER_SIZE);
-Enemy enemy23(0, 130, 0, PLAYER_SIZE);
-Enemy enemy24(0, -130, 0, PLAYER_SIZE);
-Enemy enemy25(0, 0, 0, PLAYER_SIZE);
+Enemy enemy21(-120, -130, 0, PLAYER_SIZE);
+Enemy enemy22(120, -130, 0, PLAYER_SIZE);
+Enemy enemy23(0, 0, 0, PLAYER_SIZE);
+Enemy enemy24(-120, 130, 0, PLAYER_SIZE);
+Enemy enemy25(120, 130, 0, PLAYER_SIZE);
 Platform pf1(-boundaryX / 2, -boundaryY / 2, 0.0f, boundaryX, PLAYER_SIZE);
 Platform pf2(boundaryX / 2, boundaryY / 4, 0.0f, boundaryX, PLAYER_SIZE);
 
@@ -407,8 +407,11 @@ void display() {
 		if (stage == 1) {
 			stage = 2;
 			enemycount = 5;
+			player.setCenter(Vector3f(-boundaryX + PLAYER_SIZE * 1.5f, -boundaryY + PLAYER_SIZE * 1.5f, 0.0f));
 		}
-		
+		else if (stage == 2) {
+			stage = 3;
+		}
 		if (stage == 3) {
 			glEnable(GL_TEXTURE_2D);
 			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
@@ -738,14 +741,21 @@ void keyboardDown(unsigned char key, int x, int y) {
 		break;
 	case 'R':
 	case 'r':
-		if (life == 0) {
+		if (life == 0 || enemycount == 0) {
 			life = 3;
 			stage = 0;
-		}
-		if (enemycount == 0) {
 			enemycount = 3;
-			life = 3;
-			stage = 0;
+			player.setCenter(Vector3f(-boundaryX + PLAYER_SIZE * 1.5f, -boundaryY + PLAYER_SIZE * 1.5f, 0.0f));
+			Enemy enemy1(0, -130, 0, PLAYER_SIZE);
+			Enemy enemy2(0, 0, 0, PLAYER_SIZE);
+			Enemy enemy3(0, 130, 0, PLAYER_SIZE);
+			Enemy enemy21(-120, -130, 0, PLAYER_SIZE);
+			Enemy enemy22(120, -130, 0, PLAYER_SIZE);
+			Enemy enemy23(0, 0, 0, PLAYER_SIZE);
+			Enemy enemy24(-120, 130, 0, PLAYER_SIZE);
+			Enemy enemy25(120, 130, 0, PLAYER_SIZE);
+			
+
 		}
 		break;
 	default:
