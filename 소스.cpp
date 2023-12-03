@@ -135,10 +135,11 @@ void CollisionHandler(Player& player, vector<Bubble>& bubbles) {
 			if (bubbles[i].getRadius() == 20) {
 				eff(10, effect, bubbles[i]);
 				chain.push_back(bubbles[i]);
-				bubbles.erase(bubbles.begin() + i);
+				
 				if (bubbles[i].enemycollision == 1) {
 					bubblecount--;
 				}
+				bubbles.erase(bubbles.begin() + i);
 				for (int k = 0; k < chain.size(); k++) {
 					for (int j = 0; j < bubbles.size(); j++) {
 						if (BubbleCollision(chain[k], bubbles[j])) {
@@ -759,6 +760,8 @@ void keyboardDown(unsigned char key, int x, int y) {
 			stage = 0;
 			enemycount = 3;
 			player.setCenter(Vector3f(-boundaryX + PLAYER_SIZE * 1.5f, -boundaryY + PLAYER_SIZE * 1.5f, 0.0f));
+			player.setVelocity(Vector3f(0, 0, 0));
+			player.setAcceleration(Vector3f(0, 0, 0));
 			enemy1.setCenter(Vector3f(0, -130, 0));
 			enemy2.setCenter(Vector3f(0, 0, 0));
 			enemy3.setCenter(Vector3f(0, 130, 0));
