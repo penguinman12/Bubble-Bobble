@@ -749,11 +749,15 @@ void keyboardDown(unsigned char key, int x, int y) {
 			enemy1.setCenter(Vector3f(0, -130, 0));
 			enemy2.setCenter(Vector3f(0, 0, 0));
 			enemy3.setCenter(Vector3f(0, 130, 0));
+			enemy1.setFace(Enemy::FACE::LEFT);
+			enemy3.setFace(Enemy::FACE::LEFT);
 			enemy21.setCenter(Vector3f(-120, -130, 0));
 			enemy22.setCenter(Vector3f(120, -130, 0));
 			enemy23.setCenter(Vector3f(0, 0, 0));
 			enemy24.setCenter(Vector3f(-120, 130, 0));
 			enemy25.setCenter(Vector3f(120, 130, 0));
+			enemy22.setFace(Enemy::FACE::LEFT);
+			enemy24.setFace(Enemy::FACE::LEFT);
 
 		}
 		break;
