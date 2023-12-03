@@ -753,6 +753,7 @@ void keyboardDown(unsigned char key, int x, int y) {
 	case 'R':
 	case 'r':
 		if (life == 0 || enemycount == 0) {
+			
 			life = 3;
 			stage = 0;
 			enemycount = 3;
@@ -769,7 +770,8 @@ void keyboardDown(unsigned char key, int x, int y) {
 			enemy25.setCenter(Vector3f(120, 130, 0));
 			enemy22.setFace(Enemy::FACE::LEFT);
 			enemy24.setFace(Enemy::FACE::LEFT);
-
+			bubblecount = 0;
+			bubbles.clear();
 		}
 		break;
 	default:
