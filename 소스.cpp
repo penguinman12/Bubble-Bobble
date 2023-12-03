@@ -153,6 +153,7 @@ void CollisionHandler(Player& player, vector<Bubble>& bubbles) {
 				}
 
 			}
+			chain.clear();
 		}
 	}
 }
