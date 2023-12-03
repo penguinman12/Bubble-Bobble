@@ -49,6 +49,11 @@ Player player2(boundaryX / 3, -boundaryY + PLAYER_SIZE * 5.0f, 0.0f, PLAYER_SIZE
 Enemy enemy1(0, -130, 0, PLAYER_SIZE);
 Enemy enemy2(0, 0, 0, PLAYER_SIZE);
 Enemy enemy3(0, 130, 0, PLAYER_SIZE);
+Enemy enemy21(0, -130, 0, PLAYER_SIZE);
+Enemy enemy22(0, 0, 0, PLAYER_SIZE);
+Enemy enemy23(0, 130, 0, PLAYER_SIZE);
+Enemy enemy24(0, -130, 0, PLAYER_SIZE);
+Enemy enemy25(0, 0, 0, PLAYER_SIZE);
 Platform pf1(-boundaryX / 2, -boundaryY / 2, 0.0f, boundaryX, PLAYER_SIZE);
 Platform pf2(boundaryX / 2, boundaryY / 4, 0.0f, boundaryX, PLAYER_SIZE);
 
@@ -217,10 +222,20 @@ void initialize() {
 	enemy1.setFace(Enemy::FACE::RIGHT);
 	enemy2.setFace(Enemy::FACE::LEFT);
 	enemy3.setFace(Enemy::FACE::RIGHT);
+	enemy21.setFace(Enemy::FACE::LEFT);
+	enemy22.setFace(Enemy::FACE::RIGHT);
+	enemy23.setFace(Enemy::FACE::LEFT);
+	enemy24.setFace(Enemy::FACE::RIGHT);
+	enemy25.setFace(Enemy::FACE::LEFT);
 	player.initialize();
 	enemy1.initialize();
 	enemy2.initialize();
 	enemy3.initialize();
+	enemy21.initialize();
+	enemy22.initialize();
+	enemy23.initialize();
+	enemy24.initialize();
+	enemy25.initialize();
 	texture1.initializeTexture("Front Image1.png");
 	texture2.initializeTexture("Front Image2.png");
 	playerf1.initializeTexture("playerL.png");
@@ -286,6 +301,27 @@ void idle() {
 		}
 		if (stage == 2) {
 
+			enemy21.move();
+			enemy22.move();
+			enemy23.move();
+			enemy24.move();
+			enemy25.move();
+			enemyMove(enemy21, F211);
+			enemyMove(enemy22, F212);
+			enemyMove(enemy23, F222);
+			enemyMove(enemy24, F231);
+			enemyMove(enemy25, F232);
+			minuslife(enemy21, player);
+			minuslife(enemy22, player);
+			minuslife(enemy23, player);
+			minuslife(enemy24, player);
+			minuslife(enemy25, player);
+
+			CollisionHandler(enemy21, bubbles);
+			CollisionHandler(enemy22, bubbles);
+			CollisionHandler(enemy23, bubbles);
+			CollisionHandler(enemy24, bubbles);
+			CollisionHandler(enemy25, bubbles);
 			CollisionHandler(player, bubbles);
 			handleCollision(player, ground);
 			handleCollision(player, F212);
@@ -370,8 +406,9 @@ void display() {
 	if (enemycount == 0) {
 		if (stage == 1) {
 			stage = 2;
-			enemycount = 3;
+			enemycount = 5;
 		}
+		
 		if (stage == 3) {
 			glEnable(GL_TEXTURE_2D);
 			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
@@ -529,9 +566,11 @@ void display() {
 		F223.draw();
 		F231.draw();
 		F232.draw();
-		enemy1.draw();
-		enemy2.draw();
-		enemy3.draw();
+		enemy21.draw();
+		enemy22.draw();
+		enemy23.draw();
+		enemy24.draw();
+		enemy25.draw();
 		player.draw();
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
