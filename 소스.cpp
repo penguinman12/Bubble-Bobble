@@ -746,15 +746,14 @@ void keyboardDown(unsigned char key, int x, int y) {
 			stage = 0;
 			enemycount = 3;
 			player.setCenter(Vector3f(-boundaryX + PLAYER_SIZE * 1.5f, -boundaryY + PLAYER_SIZE * 1.5f, 0.0f));
-			Enemy enemy1(0, -130, 0, PLAYER_SIZE);
-			Enemy enemy2(0, 0, 0, PLAYER_SIZE);
-			Enemy enemy3(0, 130, 0, PLAYER_SIZE);
-			Enemy enemy21(-120, -130, 0, PLAYER_SIZE);
-			Enemy enemy22(120, -130, 0, PLAYER_SIZE);
-			Enemy enemy23(0, 0, 0, PLAYER_SIZE);
-			Enemy enemy24(-120, 130, 0, PLAYER_SIZE);
-			Enemy enemy25(120, 130, 0, PLAYER_SIZE);
-			
+			enemy1.setCenter(Vector3f(0, -130, 0));
+			enemy2.setCenter(Vector3f(0, 0, 0));
+			enemy3.setCenter(Vector3f(0, 130, 0));
+			enemy21.setCenter(Vector3f(-120, -130, 0));
+			enemy22.setCenter(Vector3f(120, -130, 0));
+			enemy23.setCenter(Vector3f(0, 0, 0));
+			enemy24.setCenter(Vector3f(-120, 130, 0));
+			enemy25.setCenter(Vector3f(120, 130, 0));
 
 		}
 		break;
