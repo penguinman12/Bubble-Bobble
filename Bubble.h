@@ -25,7 +25,8 @@ public:
 	void draw() const;
 	void RandomMaterial();
 	void RandomVelocity();
-	
+	int enemycollision=0;
+
 
 private:
 	float radius;
