@@ -135,7 +135,7 @@ void CollisionHandler(Player& player, vector<Bubble>& bubbles) {
 			if (bubbles[i].getRadius() == 20) {
 				eff(10, effect, bubbles[i]);
 				chain.push_back(bubbles[i]);
-				
+
 				if (bubbles[i].enemycollision == 1) {
 					bubblecount--;
 				}
@@ -352,6 +352,7 @@ void idle() {
 		}
 
 		for (int i = 0; i < bubbles.size(); i++) {
+			
 			bubbles[i].move();
 			//버블 크기 조절
 			if (bubbles[i].getRadius() < PLAYER_SIZE / 2)
@@ -415,10 +416,10 @@ void display() {
 
 	// Draw 2D
 	if (enemycount == 0) {
-		if (stage == 1 && bubblecount==0) {
+		if (stage == 1 && bubblecount == 0) {
 			stage = 2;
 			bubbles.clear();
-			
+
 			enemycount = 5;
 			player.setCenter(Vector3f(-boundaryX + PLAYER_SIZE * 1.5f, -boundaryY + PLAYER_SIZE * 1.5f, 0.0f));
 		}
@@ -466,6 +467,7 @@ void display() {
 
 	if (life == 0) {
 		stage = -1;
+
 		glEnable(GL_TEXTURE_2D);
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 		glBindTexture(GL_TEXTURE_2D, gameover.getTextureID());
@@ -572,7 +574,7 @@ void display() {
 		}
 	}
 	if (stage == 2) {
-		
+
 		ground.draw();
 		ground2.draw();
 		ground3.draw();
@@ -721,8 +723,11 @@ void display() {
 	glEnable(light.getID());
 	light.draw();
 
-	for (int i = 0; i < bubbles.size(); i++)
-		bubbles[i].draw();
+	for (int i = 0; i < bubbles.size(); i++) {
+		if (stage != -1) {
+			bubbles[i].draw();
+		}
+	}
 
 	for (int i = 0; i < effect.size(); i++) {
 		effect[i].draw();
@@ -757,7 +762,7 @@ void keyboardDown(unsigned char key, int x, int y) {
 	case 'R':
 	case 'r':
 		if (life == 0 || enemycount == 0) {
-			
+
 			life = 3;
 			stage = 0;
 			enemycount = 3;
@@ -768,14 +773,18 @@ void keyboardDown(unsigned char key, int x, int y) {
 			enemy2.setCenter(Vector3f(0, 0, 0));
 			enemy3.setCenter(Vector3f(0, 130, 0));
 			enemy1.setFace(Enemy::FACE::LEFT);
+			enemy2.setFace(Enemy::FACE::RIGHT);
 			enemy3.setFace(Enemy::FACE::LEFT);
 			enemy21.setCenter(Vector3f(-120, -130, 0));
 			enemy22.setCenter(Vector3f(120, -130, 0));
 			enemy23.setCenter(Vector3f(0, 0, 0));
 			enemy24.setCenter(Vector3f(-120, 130, 0));
 			enemy25.setCenter(Vector3f(120, 130, 0));
-			enemy22.setFace(Enemy::FACE::LEFT);
-			enemy24.setFace(Enemy::FACE::LEFT);
+			enemy21.setFace(Enemy::FACE::LEFT);
+			enemy22.setFace(Enemy::FACE::RIGHT);
+			enemy23.setFace(Enemy::FACE::LEFT);
+			enemy24.setFace(Enemy::FACE::RIGHT);
+			enemy25.setFace(Enemy::FACE::LEFT);
 			bubblecount = 0;
 			bubbles.clear();
 		}
