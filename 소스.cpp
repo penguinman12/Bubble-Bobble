@@ -19,7 +19,7 @@ int life = 3;
 int enemycount = 3;
 int COUNT = 0;
 int bubblecount = 0;
-
+int bubblecounter = 0;
 Light light(boundaryX, boundaryY, boundaryX / 2, GL_LIGHT0);
 
 clock_t start_t = clock();
@@ -101,7 +101,7 @@ bool CollisionDetector(const Enemy& enemy, const Bubble& bubble) {
 		return false;
 	}
 }
-void eff(int n, vector<Bubble>& effect,Bubble &b) {
+void eff(int n, vector<Bubble>& effect, Bubble& b) {
 	Bubble* p;
 	p = new Bubble;
 	for (int i = 0; i < n; i++) {
@@ -113,9 +113,9 @@ void eff(int n, vector<Bubble>& effect,Bubble &b) {
 	delete p;
 
 }
-bool BubbleCollision(Bubble &a, Bubble &b) {
+bool BubbleCollision(Bubble& a, Bubble& b) {
 	float distanceX = a.getCenter()[0] - b.getCenter()[0];
-	float distanceY =a.getCenter()[1] - b.getCenter()[1];
+	float distanceY = a.getCenter()[1] - b.getCenter()[1];
 	float distance = sqrt(distanceX * distanceX + distanceY * distanceY);
 
 	float collisionDistance = a.getRadius() + b.getRadius();
@@ -126,26 +126,32 @@ bool BubbleCollision(Bubble &a, Bubble &b) {
 	else {
 		return false;
 	}
-	
+
 }
 
 void CollisionHandler(Player& player, vector<Bubble>& bubbles) {
 	for (int i = 0; i < bubbles.size(); i++) {
 		if (CollisionDetector(player, bubbles[i])) {
 			if (bubbles[i].getRadius() == 20) {
-				eff(10, effect, bubbles[i]); 
+				eff(10, effect, bubbles[i]);
 				chain.push_back(bubbles[i]);
 				bubbles.erase(bubbles.begin() + i);
+				if (bubbles[i].enemycollision == 1) {
+					bubblecount--;
+				}
 				for (int k = 0; k < chain.size(); k++) {
 					for (int j = 0; j < bubbles.size(); j++) {
 						if (BubbleCollision(chain[k], bubbles[j])) {
 							eff(10, effect, bubbles[j]);
+							if (bubbles[j].enemycollision == 1) {
+								bubblecount--;
+							}
 							chain.push_back(bubbles[j]);
 							bubbles.erase(bubbles.begin() + j);
 						}
 					}
 				}
-				
+
 			}
 		}
 	}
@@ -158,9 +164,10 @@ void CollisionHandler(Enemy& enemy, vector<Bubble>& bubbles) {
 				bubbles[i].setRadius(20);
 				bubbles[i].setcollision(1);
 				bubblecount += 1;
+				bubbles[i].enemycollision = 1;
 				enemy.setCenter(Vector3f(-1000, -1000, 0));
 				enemycount--;
-			}	
+			}
 		}
 	}
 }
@@ -266,7 +273,7 @@ void idle() {
 			player.setCenter(Vector3f(260, player.getCenter()[1], player.getCenter()[2]));
 		}
 
-		
+
 		if (stage == 1) {
 			enemy1.move();
 			enemy2.move();
@@ -334,7 +341,7 @@ void idle() {
 			handleCollision(player, F231);
 			handleCollision(player, F232);
 			if (!isonfloor(player, F211) && !isonfloor(player, F212) && !isonfloor(player, F221) && !isonfloor(player, ground) &&
-				!isonfloor(player, F222) && !isonfloor(player, F223) && !isonfloor(player, F231) && !isonfloor(player, F232) ) {
+				!isonfloor(player, F222) && !isonfloor(player, F223) && !isonfloor(player, F231) && !isonfloor(player, F232)) {
 				if (player.isStop()) {
 					player.setAcceleration(Vector3f(0, -0.5f, 0));
 					player.setVerticalState(Player::VERTICAL_STATE::FALL);
@@ -368,8 +375,8 @@ void idle() {
 		}
 		for (int i = 0; i < effect.size(); i++) {
 			effect[i].move();
-			
-			
+
+
 		}
 
 		start_t = end_t;
@@ -382,7 +389,7 @@ void displayCharacters(void* font, string str, float x, float y) {
 
 	glPushMatrix();
 
-	glRasterPos2f(x, y);	
+	glRasterPos2f(x, y);
 	for (int i = 0; i < str.size(); i++) {
 		glutBitmapCharacter(font, str[i]);
 	}
@@ -406,12 +413,14 @@ void display() {
 
 	// Draw 2D
 	if (enemycount == 0) {
-		if (stage == 1) {
+		if (stage == 1 && bubblecount==0) {
 			stage = 2;
+			
 			enemycount = 5;
 			player.setCenter(Vector3f(-boundaryX + PLAYER_SIZE * 1.5f, -boundaryY + PLAYER_SIZE * 1.5f, 0.0f));
 		}
-		else if (stage == 2) {
+		else if (stage == 2 && bubblecount == 0) {
+			
 			stage = 3;
 		}
 		if (stage == 3) {
@@ -835,7 +844,7 @@ int main(int argc, char** argv) {
 
 	glutSpecialFunc(specialKeyDown);
 	glutSpecialUpFunc(specialKeyUp);
-	
+
 	//glutTimerFunc(1000, togglePl, 1);
 	// enter GLUT event processing cycle
 	glutMainLoop();
